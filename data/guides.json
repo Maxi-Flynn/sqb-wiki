@@ -244,6 +244,165 @@
       "note": "During gathering events, match the hero to the resource the event scores — verify the live task list before committing all marches."
     },
     {
+      "id": "troop-formations-ref",
+      "category": "pvp",
+      "gen": 3,
+      "title": "Troop Formations — Quick Reference",
+      "icon": "📊",
+      "summary": "One-page ratio lookup by activity & generation",
+      "collapsible": false,
+      "blocks": [
+        {
+          "type": "table",
+          "headers": ["Activity", "Gen 1", "Gen 2", "Gen 3", "Gen 4+"],
+          "rows": [
+            ["Bear Hunt (lead)", "10/30/60", "10/20/70", "10/10/80", "1/10/89"],
+            ["Bear Hunt (joiner)", "—", "—", "0/20/80", "0/20/80"],
+            ["Attack rally", "50/20/30", "50/20/30", "50/20/30", "50/20/30"],
+            ["Garrison / defense", "60/15/25", "60/15/25", "60/15/25", "60/15/25"],
+            ["Heavy defense / stall", "70/10/20", "70/10/20", "70/10/20", "70/10/20"],
+            ["Alliance Championship", "50/20/30", "50/20/30", "50/20/30", "50/20/30"],
+            ["PvP vs infantry-heavy", "30/20/50", "30/20/50", "30/20/50", "30/20/50"],
+            ["PvP vs cavalry-heavy", "60/10/30", "60/10/30", "60/10/30", "60/10/30"],
+            ["PvP vs archer-heavy", "30/50/20", "30/50/20", "30/50/20", "30/50/20"],
+            ["Gathering", "100% single type", "100% single type", "100% single type", "100% single type"]
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Format is <strong>Infantry / Cavalry / Archers</strong>. Save these as march presets before events — don't build comps mid-fight. Counter-scout before deviating from defaults."
+        },
+        {
+          "type": "list",
+          "title": "Hero pairing hints (Gen 3)",
+          "items": [
+            "Bear lead: 2 archer heroes + 1 rally buff hero at 10/10/80",
+            "Attack rally: Amadeus · Petra · Marlin at 50/20/30",
+            "Garrison: Eric · Jaeger · Hilde at 60/15/25 + Saul joiner stack",
+            "Solo / AC: Amadeus · Petra · Jaeger (widgets don't apply)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "alliance-championship",
+      "category": "events",
+      "gen": 3,
+      "title": "Alliance Championship",
+      "icon": "🏟️",
+      "summary": "Registration snapshot, lane roles & 50/20/30 baseline",
+      "blocks": [
+        {
+          "type": "section",
+          "title": "How AC differs from rally PvP",
+          "body": "Alliance Championship fights are <strong>solo marches</strong> — widgets do <strong>not</strong> apply. Pick heroes on <strong>raw stats</strong>, not rally widgets. Your buffs are <strong>snapshotted at registration</strong> (pets, alliance tech, consumables) and locked for the whole event."
+        },
+        {
+          "type": "table",
+          "headers": ["Setting", "Gen 3 recommendation"],
+          "rows": [
+            ["Heroes", "Amadeus · Petra · Jaeger"],
+            ["Formation", "50% Inf / 20% Cav / 30% Arch"],
+            ["Pre-register", "Activate pet skills, combat buffs, appointments first"],
+            ["Lane assignment", "Leadership moves you — register your best once"]
+          ]
+        },
+        {
+          "type": "list",
+          "title": "Lane strategy (alliance coordination)",
+          "items": [
+            "<strong>Main lane (~20 fighters):</strong> Top power — win outright, max eliminations (2-cap per march).",
+            "<strong>Second lane (~20 fighters):</strong> Also built to win — losing both priority lanes loses the round.",
+            "<strong>Sacrifice lane:</strong> Stall, waste enemy eliminations, preserve buffers. Minimal consumables.",
+            "Round 1: spread for intel. Later rounds: reassign based on battle reports."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warn",
+          "text": "50/20/30 is the <strong>baseline</strong> — R4/R5 may call 6/2/2 or counter-builds after scouting. Don't freelancing a weird split without approval."
+        }
+      ]
+    },
+    {
+      "id": "swordland-showdown",
+      "category": "events",
+      "title": "Swordland Showdown",
+      "icon": "⚔️",
+      "summary": "Roles, building priority & when defense heroes beat attack heroes",
+      "blocks": [
+        {
+          "type": "section",
+          "title": "Event basics",
+          "body": "Bi-weekly 1-hour alliance PvP battlefield. Score <strong>Relic Points</strong> from buildings, baggage trains, undercellars, and kills. Troops are <strong>injured only</strong> (no permadeath). Personal rank rewards often matter as much as the alliance win."
+        },
+        {
+          "type": "table",
+          "headers": ["Role", "Who", "Hero / comp focus"],
+          "rows": [
+            ["Tank / Defender", "Strongest players", "Garrison leads — Eric · Jaeger · Hilde, 60/20/20. Howard + Quinn classic duo (−40% damage taken)"],
+            ["DPS", "Top whales", "Offensive solo marches — hunt enemy troops, burn cities off buildings"],
+            ["Support", "Everyone else", "Join garrisons, gather scattered points, undercellars, baggage trains"]
+          ]
+        },
+        {
+          "type": "list",
+          "title": "Building capture priority",
+          "items": [
+            "1. Royal Stables — halves teleport cooldown (capture first)",
+            "2. Bell Tower — halves capture time on everything else",
+            "3. Sanctums — point engine; hold both if possible",
+            "4. Abbeys — fill remaining marches",
+            "5. @ 15 min: Hall of Reformation (+15% dmg/def), Merc Camp, Swordshrine opens — Reformation is high value; don't tunnel Swordshrine alone"
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "Voice chat + map labels from R4/R5. If outmatched, farm <strong>personal Relic Points</strong> rather than throwing everything at unwinnable fights."
+        }
+      ]
+    },
+    {
+      "id": "outposts-territory",
+      "category": "pvp",
+      "gen": 3,
+      "title": "Outposts, Flags & Territory",
+      "icon": "🚩",
+      "summary": "Same comp logic as castle — with widget nuance for solo garrison",
+      "blocks": [
+        {
+          "type": "section",
+          "title": "Same as castle battle?",
+          "body": "Mostly yes. <strong>Attack rallies</strong> on outposts/flags use the same attack heroes and 50/20/30 default as castle/turret fights. <strong>Garrison</strong> uses Eric · Jaeger · Hilde at 60/15/25 with Saul/Gordon joiner stacks."
+        },
+        {
+          "type": "table",
+          "headers": ["Structure", "Attack", "Hold / garrison"],
+          "rows": [
+            ["Alliance outpost", "Amadeus · Petra · Marlin — 50/20/30", "Eric · Jaeger · Hilde — 60/20/20"],
+            ["Territory flag", "Same as outpost", "Same — defensive widgets activate even solo"],
+            ["Resource node (contested)", "Scout first; counter infantry with 30/20/50", "60/15/25 if holding"]
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "<strong>Widget note:</strong> Defensive widgets activate when garrisoning rallyable locations (outpost, flag, node) — even if you're alone. Use defender-widget heroes here, not attack widgets."
+        },
+        {
+          "type": "list",
+          "title": "Territory tips",
+          "items": [
+            "Reinforcing an ally's outpost under attack = PvP garrison rules (Saul stack), not Viking rules.",
+            "Scout the garrison before attacking — swap to 30/20/50 vs infantry-heavy defenders.",
+            "Double-rally still applies: attack to dislodge, garrison rally ~5s behind."
+          ]
+        }
+      ]
+    },
+    {
       "id": "solo-pvp",
       "category": "pvp",
       "gen": 3,
