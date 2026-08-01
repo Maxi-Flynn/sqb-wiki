@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendar — SQB Wiki</title>
+<link rel="stylesheet" href="../css/theme.css">
+</head>
+<body>
+
+<div class="header"></div>
+
+<div style="padding:16px">
+  <div class="intro">Recurring event cadence and known upcoming kingdom milestones for K1762.</div>
+
+  <div class="section-title" style="border-top:none;margin-top:0">Recurring Events</div>
+  <div id="window-list"></div>
+
+  <div class="section-title">Upcoming Kingdom Milestones</div>
+  <div id="milestone-list"></div>
+</div>
+
+<script src="../js/common.js"></script>
+<script>
+async function init() {
+  mountHeader({
+    eyebrow: "SQB Alliance · Kingdom #1762",
+    title: "🗓 Event Calendar",
+    sub: "Recurring cadence & upcoming milestones",
+    activeId: "calendar"
+  });
+
+  const data = await loadData("windows.json");
+
+  document.getElementById("window-list").innerHTML = data.schedule.map(w => `
+    <div class="card">
+      <div class="card-head" style="cursor:default">
+        <div class="card-icon">${w.icon}</div>
+        <div class="card-name-wrap">
+          <div class="card-name">${w.name}</div>
+          <div class="card-tag">${w.cadence}</div>
+        </div>
+      </div>
+      <div class="card-detail open" style="padding-top:0;display:block">
+        <div class="verdict">${w.note}</div>
+      </div>
+    </div>`).join('');
+
+  document.getElementById("milestone-list").innerHTML = data.upcomingMilestones.map(m => `
+    <div class="today-item spend">
+      <div class="ti-icon">📅</div>
+      <div class="ti-body">
+        <div class="ti-name">${m.text}</div>
+        <div class="ti-why">${m.date}</div>
+      </div>
+    </div>`).join('');
+}
+init();
+</script>
+</body>
+</html>

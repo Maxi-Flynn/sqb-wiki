@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KvK Matrix — SQB Wiki</title>
+<link rel="stylesheet" href="../css/theme.css">
+</head>
+<body>
+
+<div class="header"></div>
+
+<div class="legend">
+  <div class="legend-item"><div class="pip pip-use">✅</div> Spend now</div>
+  <div class="legend-item"><div class="pip pip-prep">🆗</div> OK / stage</div>
+  <div class="legend-item"><div class="pip pip-skip">⛔</div> Do not spend</div>
+</div>
+
+<div class="matrix-wrap">
+  <div class="matrix-stagebar" id="matrix-stagebar"></div>
+  <div id="matrix-body"></div>
+</div>
+
+<div class="note-box" id="matrix-notes" style="margin:20px 16px 0"></div>
+
+<div class="disclaimer" id="kvk-source-note"></div>
+
+<script src="../js/common.js"></script>
+<script>
+async function init() {
+  mountHeader({
+    eyebrow: "SQB Alliance · Kingdom #1762",
+    title: "👑 Kingdom of Power",
+    sub: "The main event — 5-day resource timing matrix",
+    activeId: "kvk"
+  });
+
+  const data = await loadData("kvk-matrix.json");
+
+  const columns = data.days.map(d => ({ num: d.num, name: d.name, color: d.color }));
+  const sections = [{
+    title: "⚔️ All Tracked Resources",
+    rows: data.rows.map(r => ({ icon: r.icon, name: r.name, pts: r.pts, cells: r.cells }))
+  }];
+
+  renderMatrix({
+    containerId: "matrix-body",
+    stagebarId: "matrix-stagebar",
+    columns,
+    sections,
+    notes: data.notes,
+  });
+
+  document.getElementById("kvk-source-note").innerHTML =
+    `${data._meta.sourceNote}<br>${data._meta.nextKvkEstimate}`;
+}
+init();
+</script>
+</body>
+</html>

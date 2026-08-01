@@ -1,0 +1,86 @@
+{
+  "_meta": {
+    "description": "Spend/hold guidance per active event, shown on the 'Today' tab of the ROI engine."
+  },
+  "none": null,
+  "kvk": {
+    "name": "Kingdom of Power (KvK)",
+    "timer": "5-day headline event — the highest-value window in the game",
+    "spend": [
+      { "icon": "🐾", "name": "Taming Marks (D3)", "why": "15K/1,150 pts — pet training day", "pts": "15,000" },
+      { "icon": "🟡", "name": "Hero Shards (D2)", "why": "Ascend on Basic Skills day", "pts": "3,040" },
+      { "icon": "🔨", "name": "Forgehammers (D5)", "why": "4K each on Power Boost", "pts": "4,000" },
+      { "icon": "⚡", "name": "Speedups (D1/D5)", "why": "30/min construction+research", "pts": "30/min" },
+      { "icon": "🔍", "name": "Intel Missions", "why": "6K filler on D1/D3/D5", "pts": "6,000" }
+    ],
+    "hold": [
+      { "icon": "💠", "name": "Mithril", "why": "Officer T1 pays 60K vs KvK 40K", "pts": "OP1 better" },
+      { "icon": "⚙️", "name": "Widgets", "why": "Officer T1 pays 12K vs KvK 8K", "pts": "OP1 better" }
+    ]
+  },
+  "sg": {
+    "name": "Strongest Governor",
+    "timer": "7-day individual event — your mid-cycle push",
+    "spend": [
+      { "icon": "⚡", "name": "Speedups", "why": "30/min all types, matching stages", "pts": "30/min" },
+      { "icon": "🟡", "name": "Hero Shards", "why": "Stage 2 & 7 ascension", "pts": "3,040" },
+      { "icon": "🐾", "name": "Taming Marks", "why": "Stage 7 pet refinement", "pts": "15,000" },
+      { "icon": "🪖", "name": "High-tier Troops", "why": "Stages 4 & 6 combat", "pts": "39" }
+    ],
+    "hold": [
+      { "icon": "💠", "name": "Mithril / Widgets", "why": "Officer Project pays more", "pts": "OP better" }
+    ]
+  },
+  "arm1": {
+    "name": "Armament Competition — Type 1",
+    "timer": "Mon–Tue · Hero Shard focus",
+    "spend": [
+      { "icon": "🔵", "name": "Overflow Shards", "why": "Only if not saving for KvK/SG", "pts": "15–125" },
+      { "icon": "⚡", "name": "Excess Speedups", "why": "1/min — only true overflow", "pts": "1/min" }
+    ],
+    "hold": [
+      { "icon": "🟡", "name": "Hero Shards", "why": "KvK D2 pays 3,040 vs 125 here — 24× more!", "pts": "HOLD" },
+      { "icon": "🔨", "name": "Forgehammers", "why": "Wrong type — no forge scoring in T1", "pts": "HOLD" }
+    ]
+  },
+  "arm2": {
+    "name": "Armament Competition — Type 2",
+    "timer": "Fri–Sat · Truegold / Gear focus",
+    "spend": [
+      { "icon": "🔨", "name": "Overflow Forgehammers", "why": "Only if OP is far off (800 pts)", "pts": "800" },
+      { "icon": "🔶", "name": "Truegold upgrades", "why": "If you must upgrade now (100 pts)", "pts": "100" }
+    ],
+    "hold": [
+      { "icon": "💠", "name": "Mithril", "why": "Officer T1 pays 60K vs 8K here", "pts": "HOLD" },
+      { "icon": "⚙️", "name": "Widgets", "why": "Officer pays 12K vs 1,600 here", "pts": "HOLD" },
+      { "icon": "🔨", "name": "Forgehammers", "why": "Officer pays 6K vs 800 here", "pts": "HOLD" }
+    ]
+  },
+  "op1": {
+    "name": "Officer Project — Type 1",
+    "timer": "Wed–Thu · Forgehammers / Charms / Troops",
+    "spend": [
+      { "icon": "💠", "name": "Mithril", "why": "60K — the single best Mithril window", "pts": "60,000" },
+      { "icon": "⚙️", "name": "Widgets", "why": "12K — best widget window", "pts": "12,000" },
+      { "icon": "🔨", "name": "Forgehammers", "why": "6K — best forge window", "pts": "6,000" },
+      { "icon": "✨", "name": "Charms", "why": "70 per charm score", "pts": "70" },
+      { "icon": "🪖", "name": "High-tier Troops", "why": "Up to 30/troop", "pts": "30" }
+    ],
+    "hold": [
+      { "icon": "🟡", "name": "Hero Shards", "why": "KvK/SG ascension pays far more", "pts": "HOLD" }
+    ]
+  },
+  "op2": {
+    "name": "Officer Project — Type 2",
+    "timer": "Sun–Mon · Gov Gear / Hero Shards",
+    "spend": [
+      { "icon": "⚙️", "name": "Widgets", "why": "12K — best widget window", "pts": "12,000" },
+      { "icon": "🔨", "name": "Forgehammers", "why": "6K — best forge window", "pts": "6,000" },
+      { "icon": "🛡️", "name": "Governor Gear", "why": "Gear score points", "pts": "varies" }
+    ],
+    "hold": [
+      { "icon": "🟡", "name": "Hero Shards", "why": "KvK D2 / SG pay 3,040 vs low here", "pts": "HOLD" },
+      { "icon": "💠", "name": "Mithril", "why": "Officer T1 (not T2) is the Mithril window", "pts": "HOLD" }
+    ]
+  }
+}

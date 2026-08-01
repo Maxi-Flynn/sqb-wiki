@@ -1,0 +1,214 @@
+{
+  "_meta": {
+    "description": "Every spendable resource and every event window that scores it. Points are per-unit. Verify against live event screens — values vary by TC level and generation.",
+    "lastUpdated": "2026-07-31",
+    "currentGen": 3
+  },
+  "events": {
+    "kvk_d1": { "name": "KvK", "day": "D1 Construction", "icon": "👑" },
+    "kvk_d2": { "name": "KvK", "day": "D2 Basic Skills", "icon": "👑" },
+    "kvk_d3": { "name": "KvK", "day": "D3 Pet Training", "icon": "👑" },
+    "kvk_d4": { "name": "KvK", "day": "D4 Hero Dev", "icon": "👑" },
+    "kvk_d5": { "name": "KvK", "day": "D5 Power Boost", "icon": "👑" },
+    "sg": { "name": "Strongest Gov", "day": "matching stage", "icon": "🏆" },
+    "arm1": { "name": "Armament T1", "day": "Mon–Tue", "icon": "🛡️" },
+    "arm2": { "name": "Armament T2", "day": "Fri–Sat", "icon": "🛡️" },
+    "op1": { "name": "Officer T1", "day": "Wed–Thu", "icon": "⚔️" },
+    "op2": { "name": "Officer T2", "day": "Sun–Mon", "icon": "⚔️" },
+    "brawl": { "name": "Alliance Brawl", "day": "6-day", "icon": "🤝" }
+  },
+  "resources": [
+    {
+      "id": "mithril", "cat": "prestige", "icon": "💠", "name": "Mithril",
+      "tag": "Prestige upgrade material", "unlock": 4,
+      "windows": [
+        { "ev": "op1", "pts": 60000, "tier": "best" },
+        { "ev": "kvk_d5", "pts": 40000, "tier": "good" },
+        { "ev": "kvk_d4", "pts": 40000, "tier": "good" },
+        { "ev": "arm2", "pts": 8000, "tier": "meh" }
+      ],
+      "verdict": "<strong>Officer Project T1</strong> pays 60K — 7.5× the Armament rate. Never burn Mithril anywhere else if OP1 is within reach. Unlocks at Gen 4."
+    },
+    {
+      "id": "widget", "cat": "hero", "icon": "⚙️", "name": "Widget (Hero Gear)",
+      "tag": "Hero exclusive gear part", "unlock": 3,
+      "windows": [
+        { "ev": "op1", "pts": 12000, "tier": "best" },
+        { "ev": "kvk_d5", "pts": 8000, "tier": "good" },
+        { "ev": "kvk_d4", "pts": 8000, "tier": "good" },
+        { "ev": "arm2", "pts": 1600, "tier": "meh" }
+      ],
+      "verdict": "<strong>Officer Project T1/T2</strong> pays 12K — vastly better than Armament's 1,600. Hold widgets for Officer Project above all."
+    },
+    {
+      "id": "forgehammer", "cat": "hero", "icon": "🔨", "name": "Forgehammer",
+      "tag": "Hero gear forging", "unlock": 3,
+      "windows": [
+        { "ev": "op1", "pts": 6000, "tier": "best" },
+        { "ev": "kvk_d5", "pts": 4000, "tier": "good" },
+        { "ev": "kvk_d4", "pts": 4000, "tier": "good" },
+        { "ev": "arm2", "pts": 800, "tier": "meh" }
+      ],
+      "verdict": "<strong>Officer Project</strong> at 6K crushes Armament's 800. 60 forgehammers = 360K points in OP vs 48K in Armament."
+    },
+    {
+      "id": "mythic_shard", "cat": "hero", "icon": "🟡", "name": "Mythic Hero Shard",
+      "tag": "Top-tier ascension", "unlock": 3,
+      "windows": [
+        { "ev": "kvk_d2", "pts": 3040, "tier": "best" },
+        { "ev": "sg", "pts": 3040, "tier": "best" },
+        { "ev": "arm1", "pts": 125, "tier": "meh" },
+        { "ev": "op2", "pts": 125, "tier": "meh" }
+      ],
+      "verdict": "<strong>KvK Day 2</strong> and <strong>Strongest Gov</strong> pay 3,040 — Armament only 125. Hold for KvK/SG."
+    },
+    {
+      "id": "epic_shard", "cat": "hero", "icon": "🟣", "name": "Epic Hero Shard",
+      "tag": "Epic ascension", "unlock": 3,
+      "windows": [
+        { "ev": "kvk_d2", "pts": 1220, "tier": "best" },
+        { "ev": "sg", "pts": 1220, "tier": "best" },
+        { "ev": "arm1", "pts": 50, "tier": "meh" },
+        { "ev": "op2", "pts": 50, "tier": "meh" }
+      ],
+      "verdict": "<strong>KvK D2 / SG</strong> = 1,220 each. ~24× better than Armament. Hold."
+    },
+    {
+      "id": "rare_shard", "cat": "hero", "icon": "🔵", "name": "Rare Hero Shard",
+      "tag": "Rare ascension", "unlock": 3,
+      "windows": [
+        { "ev": "kvk_d2", "pts": 350, "tier": "best" },
+        { "ev": "sg", "pts": 350, "tier": "best" },
+        { "ev": "arm1", "pts": 15, "tier": "meh" },
+        { "ev": "op2", "pts": 15, "tier": "meh" }
+      ],
+      "verdict": "<strong>KvK D2 / SG</strong> = 350. ~23× the dual-types. Keys→chests→shards, spend shards in KvK D2."
+    },
+    {
+      "id": "roulette", "cat": "hero", "icon": "🎲", "name": "Hero Roulette Spin",
+      "tag": "From keys / gems", "unlock": 3,
+      "windows": [
+        { "ev": "kvk_d2", "pts": 8000, "tier": "best" },
+        { "ev": "kvk_d3", "pts": 8000, "tier": "best" },
+        { "ev": "sg", "pts": 8000, "tier": "best" }
+      ],
+      "verdict": "8,000 per spin in <strong>KvK D2, D3</strong> and SG. Time spins to these windows if keys trigger roulette."
+    },
+    {
+      "id": "construction", "cat": "speed", "icon": "🏗️", "name": "Construction Speedup",
+      "tag": "per minute", "unlock": 1,
+      "windows": [
+        { "ev": "kvk_d1", "pts": 30, "tier": "best" },
+        { "ev": "sg", "pts": 30, "tier": "best" },
+        { "ev": "op1", "pts": 30, "tier": "best", "note": "via milestones" },
+        { "ev": "arm1", "pts": 1, "tier": "meh" },
+        { "ev": "arm2", "pts": 1, "tier": "meh" }
+      ],
+      "verdict": "30 pts/min in <strong>KvK D1, SG, KvK D5</strong>. Only 1 pt/min in Armament — never waste construction speedups there."
+    },
+    {
+      "id": "research", "cat": "speed", "icon": "📚", "name": "Research Speedup",
+      "tag": "per minute", "unlock": 1,
+      "windows": [
+        { "ev": "kvk_d1", "pts": 30, "tier": "best" },
+        { "ev": "sg", "pts": 30, "tier": "best" },
+        { "ev": "arm1", "pts": 1, "tier": "meh" }
+      ],
+      "verdict": "30 pts/min in <strong>KvK D1 / SG</strong>. Save research speedups for these."
+    },
+    {
+      "id": "training", "cat": "speed", "icon": "⚔️", "name": "Training Speedup",
+      "tag": "per minute", "unlock": 1,
+      "windows": [
+        { "ev": "kvk_d1", "pts": 30, "tier": "best" },
+        { "ev": "sg", "pts": 30, "tier": "best" },
+        { "ev": "brawl", "pts": 30, "tier": "good", "note": "training day" }
+      ],
+      "verdict": "30 pts/min in <strong>KvK, SG, Alliance Brawl</strong> training windows. Brawl is the easy filler."
+    },
+    {
+      "id": "troops", "cat": "basic", "icon": "🪖", "name": "Troop Training",
+      "tag": "points scale with tier", "unlock": 1,
+      "windows": [
+        { "ev": "kvk_d4", "pts": 39, "tier": "best", "note": "T10, scales down" },
+        { "ev": "op1", "pts": 30, "tier": "good", "note": "T10" },
+        { "ev": "sg", "pts": 39, "tier": "best", "note": "stages 4 & 6" }
+      ],
+      "verdict": "Train your <strong>highest tier</strong> troops in KvK D4 / SG combat stages / Officer T1."
+    },
+    {
+      "id": "adv_taming", "cat": "pet", "icon": "🐾", "name": "Advanced Taming Mark",
+      "tag": "pet refinement", "unlock": 2,
+      "windows": [
+        { "ev": "kvk_d3", "pts": 15000, "tier": "best" },
+        { "ev": "kvk_d5", "pts": 15000, "tier": "best" },
+        { "ev": "sg", "pts": 15000, "tier": "best", "note": "stage 7" }
+      ],
+      "verdict": "15,000 pts in <strong>KvK D3 (Pet Training), D5, SG stage 7</strong>. Nothing else scores these — hold."
+    },
+    {
+      "id": "common_taming", "cat": "pet", "icon": "🐾", "name": "Common Taming Mark",
+      "tag": "pet refinement", "unlock": 2,
+      "windows": [
+        { "ev": "kvk_d3", "pts": 1150, "tier": "best" },
+        { "ev": "kvk_d5", "pts": 1150, "tier": "best" },
+        { "ev": "sg", "pts": 1150, "tier": "best" }
+      ],
+      "verdict": "1,150 in the same pet windows. Great for closing a Pet Power gap while scoring big."
+    },
+    {
+      "id": "truegold", "cat": "prestige", "icon": "🔶", "name": "Truegold",
+      "tag": "prestige building upgrade", "unlock": 4,
+      "windows": [
+        { "ev": "kvk_d1", "pts": 2000, "tier": "best" },
+        { "ev": "kvk_d5", "pts": 2000, "tier": "best" },
+        { "ev": "sg", "pts": 2000, "tier": "best" },
+        { "ev": "arm1", "pts": 100, "tier": "meh" },
+        { "ev": "arm2", "pts": 100, "tier": "meh" }
+      ],
+      "verdict": "2,000 in KvK/SG vs just 100 in Armament. Upgrade during KvK/SG windows once TG unlocks (Gen 4)."
+    },
+    {
+      "id": "intel", "cat": "basic", "icon": "🔍", "name": "Intel Mission",
+      "tag": "flexible filler", "unlock": 1,
+      "windows": [
+        { "ev": "kvk_d1", "pts": 6000, "tier": "best" },
+        { "ev": "kvk_d3", "pts": 6000, "tier": "best" },
+        { "ev": "kvk_d5", "pts": 6000, "tier": "best" }
+      ],
+      "verdict": "6,000 per mission across <strong>KvK D1, D3, D5</strong>. Excellent flexible filler."
+    },
+    {
+      "id": "gather", "cat": "basic", "icon": "🌾", "name": "Gathering (Wilderness)",
+      "tag": "per 1,000 gathered", "unlock": 1,
+      "windows": [
+        { "ev": "kvk_d2", "pts": 2, "tier": "good" },
+        { "ev": "kvk_d4", "pts": 2, "tier": "good" },
+        { "ev": "kvk_d5", "pts": 2, "tier": "good" },
+        { "ev": "sg", "pts": 3, "tier": "best", "note": "stage 7" }
+      ],
+      "verdict": "Low per-unit, but marches gather constantly. Time march returns to land on gathering days for free points."
+    },
+    {
+      "id": "charms", "cat": "basic", "icon": "✨", "name": "Charms / Charm Designs",
+      "tag": "governor charm score", "unlock": 3,
+      "windows": [
+        { "ev": "kvk_d4", "pts": 70, "tier": "best" },
+        { "ev": "op1", "pts": 70, "tier": "best" },
+        { "ev": "kvk_d1", "pts": 70, "tier": "good" },
+        { "ev": "kvk_d3", "pts": 70, "tier": "good" }
+      ],
+      "verdict": "70 pts per charm score in <strong>KvK D4 and Officer T1</strong>."
+    },
+    {
+      "id": "chief_gear", "cat": "prestige", "icon": "🛡️", "name": "Chief / Governor Gear",
+      "tag": "gear score increase", "unlock": 3,
+      "windows": [
+        { "ev": "kvk_d5", "pts": 36, "tier": "best" },
+        { "ev": "sg", "pts": 36, "tier": "good", "note": "stage 6/7" },
+        { "ev": "arm1", "pts": 3, "tier": "meh" }
+      ],
+      "verdict": "Governor gear score pays 36 in <strong>KvK D5 / SG</strong> vs 3 in Armament."
+    }
+  ]
+}

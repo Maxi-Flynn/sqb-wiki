@@ -1,0 +1,36 @@
+{
+  "_meta": {
+    "description": "KvK (Kingdom of Power) 5-day timing matrix. Cross-verified against kingshotguide.org KvK calculator — structure matches, alliance guidance is more conservative on a few dual-scoring items (noted below).",
+    "lastUpdated": "2026-07-31",
+    "sourceNote": "Alliance-provided tip table, cross-checked against kingshotguide.org/calculator/kvk-event-calculator",
+    "nextKvkEstimate": "KvK 3 prep ≈ 2026-08-11 (28-day cycle from first Castle Competition 2026-05-23)"
+  },
+  "days": [
+    { "id": "d1", "num": 1, "name": "City Construction", "color": "#C4773A" },
+    { "id": "d2", "num": 2, "name": "Basic Skills Up", "color": "#8A5AC4" },
+    { "id": "d3", "num": 3, "name": "Pet Training", "color": "#3AC48A" },
+    { "id": "d4", "num": 4, "name": "Hero Development", "color": "#C43A3A" },
+    { "id": "d5", "num": 5, "name": "Power Boost", "color": "#3A8AC4" }
+  ],
+  "rows": [
+    { "icon": "🔶", "name": "Truegold", "pts": "2,000 pts", "cells": ["use","prep","skip","skip","prep"], "note": "Calculator scores D2/D5 as full ✅ — alliance is more conservative" },
+    { "icon": "🟡", "name": "Hero Shards", "pts": "350–3,040 pts", "cells": ["skip","use","prep","skip","skip"] },
+    { "icon": "⚡", "name": "Speedups", "pts": "30 pts/min", "cells": ["use","use","skip","skip","use"] },
+    { "icon": "🪖", "name": "Train Troops", "pts": "1–39 pts", "cells": ["skip","skip","skip","use","skip"] },
+    { "icon": "✨", "name": "Charms", "pts": "70 pts/+1", "cells": ["prep","skip","prep","use","skip"] },
+    { "icon": "🛡️", "name": "Chief/Gov Gear", "pts": "36 pts/+1", "cells": ["skip","skip","skip","skip","use"] },
+    { "icon": "🐾", "name": "Pet Adv./Refine", "pts": "50–15,000 pts", "cells": ["skip","skip","prep","skip","use"] },
+    { "icon": "🎲", "name": "Lucky Wheel", "pts": "8,000 pts", "cells": ["skip","use","use","skip","skip"] },
+    { "icon": "🌾", "name": "Gather Resources", "pts": "2 pts/1,000", "cells": ["skip","use","skip","use","use"] },
+    { "icon": "🔍", "name": "Intel Mission", "pts": "6,000 pts", "cells": ["use","skip","use","skip","use"] },
+    { "icon": "💠", "name": "Mithril", "pts": "40,000 pts", "cells": ["skip","skip","skip","prep","use"], "note": "Officer Project T1 pays 60K — even better than KvK D5" },
+    { "icon": "🔨", "name": "Forgehammers", "pts": "4,000 pts", "cells": ["skip","skip","skip","prep","use"], "note": "Officer Project pays 6K — better than KvK D5" },
+    { "icon": "⚙️", "name": "Widgets", "pts": "8,000 pts", "cells": ["skip","skip","skip","prep","use"], "note": "Officer Project pays 12K — better than KvK D5" }
+  ],
+  "notes": [
+    { "icon": "📋", "text": "Legend: ✅ Spend now · 🆗 OK to spend (scores but not optimal) · ⛔ Do not spend" },
+    { "icon": "🔍", "text": "Day names verified against kingshotguide.org's KvK calculator — D1 City Construction, D2 Basic Skills Up, D3 Pet Training, D4 Hero Development, D5 Power Boost." },
+    { "icon": "⚠️", "text": "Where the alliance tip is more conservative than the raw calculator (TrueGold D2/D5, Charms D1/D3, Mithril/Forgehammer/Widget D4), it's likely because a <em>better</em> window exists later — not because the calculator is wrong." },
+    { "icon": "🎯", "text": "This is the <strong>main event</strong>. Hold Mithril, Widgets, and Forgehammers through all of KvK if Officer Project T1 is closer — it out-scores even KvK D5 for those three items." }
+  ]
+}

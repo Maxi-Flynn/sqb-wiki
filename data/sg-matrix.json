@@ -1,0 +1,80 @@
+{
+  "_meta": {
+    "description": "Strongest Governor 7-stage timing matrix. Stage 3 unverified — pending screenshots.",
+    "lastUpdated": "2026-06-27",
+    "stageNote": "Stage 3 not yet captured from in-game screens"
+  },
+  "stages": [
+    { "id": "s1", "num": 1, "name": "City Construction", "color": "#C4773A" },
+    { "id": "s2", "num": 2, "name": "Hero Development", "color": "#8A5AC4" },
+    { "id": "s3", "num": 3, "name": "Coming Soon", "color": "#5A4A3A", "unverified": true },
+    { "id": "s4", "num": 4, "name": "Combat Training", "color": "#C43A3A" },
+    { "id": "s5", "num": 5, "name": "Basic Skills Up", "color": "#3A8AC4" },
+    { "id": "s6", "num": 6, "name": "Combat Training", "color": "#C43A8A" },
+    { "id": "s7", "num": 7, "name": "Hero Development", "color": "#3AC48A" }
+  ],
+  "sections": [
+    {
+      "title": "⚡ Speedups — 30 pts/min (gem speedups excluded)",
+      "rows": [
+        { "icon": "🏗️", "name": "Construction", "pts": "30 pts/min", "cells": ["use","use","na","skip","use","skip","use"] },
+        { "icon": "📚", "name": "Research", "pts": "30 pts/min", "cells": ["use","use","na","skip","use","skip","use"] },
+        { "icon": "⚔️", "name": "Troop Training", "pts": "30 pts/min", "cells": ["use","use","na","skip","use","skip","use"] },
+        { "icon": "🎓", "name": "Master Skills", "pts": "30 pts/min", "cells": ["use","use","na","skip","use","skip","use"] },
+        { "icon": "💊", "name": "Healing", "pts": "no scoring value", "cells": ["free","free","na","free","free","free","free"] }
+      ]
+    },
+    {
+      "title": "🧙 Hero Items",
+      "rows": [
+        { "icon": "🔨", "name": "Forgehammer", "pts": "4,000 pts each", "cells": ["skip","use","na","use","use","skip","use"] },
+        { "icon": "⚙️", "name": "Widget (Hero Gear)", "pts": "8,000 pts each", "cells": ["skip","use","na","use","use","skip","use"] },
+        { "icon": "🎲", "name": "Hero Roulette", "pts": "8,000 pts/spin", "cells": ["skip","use","na","skip","skip","skip","use"] },
+        { "icon": "🟣", "name": "Epic Hero Shard", "pts": "1,220 pts each", "cells": ["skip","use","na","skip","skip","skip","use"] },
+        { "icon": "🔵", "name": "Rare Hero Shard", "pts": "350 pts each", "cells": ["skip","use","na","skip","skip","skip","use"] },
+        { "icon": "🟡", "name": "Mythic Hero Shard", "pts": "3,040 pts each", "cells": ["skip","use","na","skip","skip","skip","use"] },
+        { "icon": "📜", "name": "Master Emblem", "pts": "6,000 pts each", "cells": ["skip","use","na","skip","skip","skip","free"] },
+        { "icon": "📖", "name": "Master's Manuscript", "pts": "60 pts each", "cells": ["skip","use","na","skip","skip","skip","free"] }
+      ]
+    },
+    {
+      "title": "🐾 Pets",
+      "rows": [
+        { "icon": "🐾", "name": "Adv. Taming Mark", "pts": "15,000 pts each", "cells": ["skip","skip","na","skip","skip","skip","use"] },
+        { "icon": "🐾", "name": "Common Taming Mark", "pts": "1,150 pts each", "cells": ["skip","skip","na","skip","skip","skip","use"] },
+        { "icon": "⬆️", "name": "Pet Advancement", "pts": "50 pts / score +1", "cells": ["skip","skip","na","skip","skip","skip","use"] }
+      ]
+    },
+    {
+      "title": "⚔️ Troop Training — points scale with tier",
+      "rows": [
+        { "icon": "🪖", "name": "Lv.7 Brave Troops", "pts": "16 pts each", "cells": ["skip","skip","na","use","skip","use","skip"] },
+        { "icon": "🪖", "name": "Lower Tier Troops", "pts": "1–11 pts each", "cells": ["free","free","na","use","free","use","free"] }
+      ]
+    },
+    {
+      "title": "💎 Prestige Items (TG+ players)",
+      "rows": [
+        { "icon": "🔶", "name": "Truegold (TG)", "pts": "2,000 pts each", "cells": ["use","use","na","use","use","skip","use"] },
+        { "icon": "💠", "name": "Mithril", "pts": "40,000 pts each", "cells": ["skip","use","na","use","use","skip","use"] }
+      ]
+    },
+    {
+      "title": "🎯 Other",
+      "rows": [
+        { "icon": "✨", "name": "Gov. Charm Score", "pts": "70 pts / +1 max", "cells": ["use","skip","na","use","skip","skip","skip"] },
+        { "icon": "🛡️", "name": "Gov. Gear Score", "pts": "36 pts / +1 max", "cells": ["skip","skip","na","skip","skip","use","use"] },
+        { "icon": "🌾", "name": "Gathering (wild)", "pts": "3 pts / 2.5K bread", "cells": ["free","free","na","free","free","free","use"] }
+      ]
+    }
+  ],
+  "notes": [
+    { "icon": "🔷", "text": "<strong>Stage 3</strong> is not yet visible — screenshots pending. Column will update when data is available." },
+    { "icon": "🟡", "text": "<strong>Prep (stage, don't claim)</strong> applies to Watchtower tasks: complete the task for credit, hold the claim until the new scoring stage opens." },
+    { "icon": "⚡", "text": "<strong>Speedups score in every stage</strong> — but supply is limited. Prioritize S1, S5 for construction/research; S4+S6 for training." },
+    { "icon": "🐾", "text": "<strong>All pet items are S7 only.</strong> Hold every taming mark until Stage 7 — zero scoring value elsewhere." },
+    { "icon": "🔨", "text": "<strong>Forgehammers</strong> score in S2, S4, S5, and S7. Don't spend in S1, S3, or S6." },
+    { "icon": "🔶", "text": "<strong>Truegold / Mithril</strong> — not relevant until TG-tier buildings unlock (Gen 4)." },
+    { "icon": "📊", "text": "Data sourced from in-game Strongest Governor stage screens. Last verified: July 2026." }
+  ]
+}

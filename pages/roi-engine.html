@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROI Engine — SQB Wiki</title>
+<link rel="stylesheet" href="../css/theme.css">
+</head>
+<body>
+
+<div class="header"></div>
+
+<div class="panel active" id="resources">
+  <div style="padding:16px 16px 0">
+    <div class="intro">Tap any resource to see every event that scores it, ranked best-to-worst by points per unit. 🔒 = unlocks in a future generation.</div>
+    <div class="filters">
+      <div class="chip active" data-filter="all">All</div>
+      <div class="chip" data-filter="hero">Hero</div>
+      <div class="chip" data-filter="speed">Speedups</div>
+      <div class="chip" data-filter="pet">Pets</div>
+      <div class="chip" data-filter="prestige">Prestige</div>
+      <div class="chip" data-filter="basic">Basic</div>
+    </div>
+  </div>
+  <div id="resource-list" style="padding:0 16px"></div>
+</div>
+
+<div style="padding:0 16px">
+  <div style="display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:16px">
+    <button class="tab active" data-panel="tab-resources" onclick="switchTab('tab-resources')">By Resource</button>
+    <button class="tab" data-panel="tab-today" onclick="switchTab('tab-today')">Today</button>
+    <button class="tab" data-panel="tab-windows" onclick="switchTab('tab-windows')">Windows</button>
+  </div>
+</div>
+
+<div class="panel" id="tab-today" style="padding:0 16px">
+  <div class="event-banner">
+    <div class="eb-label">Active Scoring Window</div>
+    <div class="eb-name" id="today-event">No major event active</div>
+    <div class="eb-timer" id="today-timer">Set your current event below to get tailored guidance</div>
+  </div>
+  <div class="filters" style="margin-bottom:16px">
+    <div class="chip active" data-today="none">None</div>
+    <div class="chip" data-today="kvk">KvK</div>
+    <div class="chip" data-today="sg">Str. Gov</div>
+    <div class="chip" data-today="arm1">Armament T1</div>
+    <div class="chip" data-today="arm2">Armament T2</div>
+    <div class="chip" data-today="op1">Officer T1</div>
+    <div class="chip" data-today="op2">Officer T2</div>
+  </div>
+  <div id="today-content">
+    <div class="note-box">Select the event that's currently live in your kingdom above.</div>
+  </div>
+</div>
+
+<div class="panel" id="tab-windows" style="padding:0 16px">
+  <div class="intro">The rhythm of scoring windows. Dual-type events alternate every 2 weeks.</div>
+  <div id="window-list"></div>
+</div>
+
+<div class="disclaimer">
+  Point values sourced from community wikis & in-game screens (Jul 2026). Always verify against your live event screen before spending.
+</div>
+
+<script src="../js/common.js"></script>
+<script>
+let resourceData, todayData, windowData;
+
+async function init() {
+  mountHeader({
+    eyebrow: "SQB Alliance · Kingdom #1762 · Gen 3",
+    title: "⚔ Resource ROI Engine",
+    sub: "Every resource → its best event window. Spend smart, hold smarter.",
+    activeId: "roi"
+  });
+
+  [resourceData, todayData, windowData] = await Promise.all([
+    loadData("resources.json"),
+    loadData("today.json"),
+    loadData("windows.json"),
+  ]);
+
+  renderResourceCards(resourceData.resources, resourceData.events, "resource-list", "all");
+  renderToday(todayData, "none");
+  renderWindowList();
+
+  wireChips("[data-filter]", (f) => renderResourceCards(resourceData.resources, resourceData.events, "resource-list", f));
+  wireChips("[data-today]", (k) => renderToday(todayData, k));
+}
+
+function renderWindowList() {
+  const list = document.getElementById("window-list");
+  list.innerHTML = windowData.schedule
+    .map(
+      (w) => `
+    <div class="card">
+      <div class="card-head" style="cursor:default">
+        <div class="card-icon">${w.icon}</div>
+        <div class="card-name-wrap">
+          <div class="card-name">${w.name}</div>
+          <div class="card-tag">${w.cadence}</div>
+        </div>
+      </div>
+      <div class="card-detail open" style="padding-top:0;display:block">
+        <div class="verdict">${w.note}</div>
+      </div>
+    </div>`
+    )
+    .join("");
+}
+
+function switchTab(id) {
+  document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
+  document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+  event.target.classList.add("active");
+  document.getElementById(id).classList.add("active");
+}
+
+init();
+</script>
+</body>
+</html>

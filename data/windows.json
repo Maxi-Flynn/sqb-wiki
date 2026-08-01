@@ -1,0 +1,25 @@
+{
+  "_meta": {
+    "description": "The rhythm of scoring windows. Dual-type events alternate every 2 weeks."
+  },
+  "schedule": [
+    { "icon": "👑", "name": "Kingdom of Power (KvK)", "cadence": "Every ~28 days · 5 days", "note": "The main event. Next K1762 KvK ≈ Aug 11 prep. Hold your best materials for this." },
+    { "icon": "🏆", "name": "Strongest Governor", "cadence": "~4-week rotation · 7 days", "note": "Your mid-cycle individual push. 7 stages, each scoring different actions." },
+    { "icon": "🤝", "name": "Alliance Brawl", "cadence": "~4-week rotation · 6 days", "note": "Individual + alliance. Good easy-filler for construction/research/training." },
+    { "icon": "🛡️", "name": "Armament Competition T1", "cadence": "Every 2 weeks · Mon–Tue", "note": "Hero Shard focus. LOW per-shard — only spend true overflow here." },
+    { "icon": "🛡️", "name": "Armament Competition T2", "cadence": "Every 2 weeks · Fri–Sat", "note": "Truegold/Gear focus. LOW rates — Officer Project beats it for gear." },
+    { "icon": "⚔️", "name": "Officer Project T1", "cadence": "Every 2 weeks · Wed–Thu", "note": "THE window for Mithril (60K), Widgets (12K), Forgehammers (6K)." },
+    { "icon": "⚔️", "name": "Officer Project T2", "cadence": "Every 2 weeks · Sun–Mon", "note": "Gov Gear + Hero Shard/Gear focus." },
+    { "icon": "🐻", "name": "Bear Trap", "cadence": "Every 2 days", "note": "Solo PvE. Single-march burst damage — high-tier troops + best combat heroes." },
+    { "icon": "💰", "name": "Merchant Empire", "cadence": "Monthly w/ Alliance Brawl", "note": "Escort caravans for Brawl points. Target enemy SSR (yellow) carts." }
+  ],
+  "upcomingMilestones": [
+    { "date": "2026-08-11", "text": "KvK 3 Prep begins (estimated)" },
+    { "date": "2026-08-17", "text": "Governor Charm Cap Raised (Lv12+)" },
+    { "date": "2026-08-31", "text": "Gen 4 Heroes: Alcar, Margot, Rosa" },
+    { "date": "2026-08-31", "text": "Gen 4 Pets: Giant Rhino, Mighty Bison" },
+    { "date": "2026-08-31", "text": "5th & 6th Masters: Guinevere & Wilson" },
+    { "date": "2026-09-13", "text": "Kingdom Transfer window opens" },
+    { "date": "2026-09-28", "text": "War Academy unlocked (T11 troops)" }
+  ]
+}

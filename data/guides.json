@@ -1,0 +1,42 @@
+{
+  "_meta": {
+    "description": "Alliance-sourced cheat sheets, cataloged from SQT/SQB chat."
+  },
+  "guides": [
+    {
+      "id": "mystic-trial",
+      "title": "Mystic Trial — Troop Compositions",
+      "icon": "🔮",
+      "summary": "Optimal Infantry/Archer/Cavalry ratios per zone",
+      "table": {
+        "headers": ["Zone", "Infantry", "Archer", "Cavalry"],
+        "rows": [
+          ["Coliseum", "50%", "10%", "40%"],
+          ["Forest of Life", "50%", "15%", "35%"],
+          ["Crystal Cave", "60%", "20%", "20%"],
+          ["Knowledge Nexus", "50%", "20%", "30%"],
+          ["Molten Fort", "60%", "15%", "25%"],
+          ["Radiant Spire", "50%", "15%", "35%"],
+          ["Fallback (any)", "62%", "6%", "32%"]
+        ]
+      },
+      "note": "Use the fallback ratio (62/6/32) if a zone-specific comp isn't working."
+    },
+    {
+      "id": "golden-glaives",
+      "title": "Golden Glaives — Watchtower Timing",
+      "icon": "🗼",
+      "summary": "Complete-but-don't-claim strategy to carry Watchtower rewards into event scoring",
+      "table": {
+        "headers": ["UTC Reset", "Complete", "Claim"],
+        "rows": [
+          ["00 (Sun)", "✅", "✅"],
+          ["08 (Sun)", "✅", "❌ hold"],
+          ["16 (Sun)", "❌ skip", "❌ skip"],
+          ["00 (Mon) *Event Start*", "✅", "✅"]
+        ]
+      },
+      "note": "Complete the 08:00 tasks but don't claim — hold the reward. Skip 16:00 entirely so those tasks are fresh at Monday's event-start reset. Claim everything at 00:00 Monday when Golden Glaives scoring goes live."
+    }
+  ]
+}

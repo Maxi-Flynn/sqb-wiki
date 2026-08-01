@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alliance Guides — SQB Wiki</title>
+<link rel="stylesheet" href="../css/theme.css">
+</head>
+<body>
+
+<div class="header"></div>
+
+<div style="padding:16px">
+  <div class="intro">Cheat sheets collected from alliance chat. Have one to add? Drop a screenshot in the alliance thread.</div>
+  <div id="guide-list"></div>
+</div>
+
+<script src="../js/common.js"></script>
+<script>
+async function init() {
+  mountHeader({
+    eyebrow: "SQB Alliance · Kingdom #1762",
+    title: "📜 Alliance Guides",
+    sub: "Cheat sheets, comps & timing tricks — straight from alliance chat",
+    activeId: "guides"
+  });
+
+  const data = await loadData("guides.json");
+  const list = document.getElementById("guide-list");
+
+  list.innerHTML = data.guides.map(g => {
+    const tableHtml = `
+      <table style="width:100%;border-collapse:collapse;margin-top:10px;font-size:11px">
+        <thead>
+          <tr>${g.table.headers.map(h => `<th style="text-align:left;padding:6px 8px;color:var(--gold-dim);border-bottom:1px solid var(--border);font-size:10px;text-transform:uppercase;letter-spacing:0.5px">${h}</th>`).join('')}</tr>
+        </thead>
+        <tbody>
+          ${g.table.rows.map(row => `<tr>${row.map(cell => `<td style="padding:6px 8px;border-bottom:1px solid var(--border);color:var(--text-dim)">${cell}</td>`).join('')}</tr>`).join('')}
+        </tbody>
+      </table>`;
+
+    return `
+      <div class="card">
+        <div class="card-head" style="cursor:default">
+          <div class="card-icon">${g.icon}</div>
+          <div class="card-name-wrap">
+            <div class="card-name">${g.title}</div>
+            <div class="card-tag">${g.summary}</div>
+          </div>
+        </div>
+        <div class="card-detail open" style="display:block">
+          ${tableHtml}
+          <div class="verdict" style="margin-top:12px">${g.note}</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+init();
+</script>
+</body>
+</html>

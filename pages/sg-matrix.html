@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strongest Governor Matrix — SQB Wiki</title>
+<link rel="stylesheet" href="../css/theme.css">
+</head>
+<body>
+
+<div class="header"></div>
+
+<div class="legend">
+  <div class="legend-item"><div class="pip pip-use">✅</div> Spend now</div>
+  <div class="legend-item"><div class="pip pip-prep">🆗</div> Stage, don't claim</div>
+  <div class="legend-item"><div class="pip pip-skip">⛔</div> Do not spend</div>
+  <div class="legend-item"><div class="pip pip-free">🔷</div> Free / no value</div>
+  <div class="legend-item"><div class="pip pip-na">—</div> N/A</div>
+</div>
+
+<div class="matrix-wrap">
+  <div class="matrix-stagebar" id="matrix-stagebar"></div>
+  <div id="matrix-body"></div>
+</div>
+
+<div class="note-box" id="matrix-notes" style="margin:20px 16px 0"></div>
+
+<div class="disclaimer" id="sg-source-note"></div>
+
+<script src="../js/common.js"></script>
+<script>
+async function init() {
+  mountHeader({
+    eyebrow: "SQB Alliance · Kingdom #1762",
+    title: "🏆 Strongest Governor",
+    sub: "7-stage resource timing matrix — when to spend, when to hold",
+    activeId: "sg"
+  });
+
+  const data = await loadData("sg-matrix.json");
+
+  const columns = data.stages.map(s => ({ num: s.num, name: s.name, color: s.color }));
+
+  renderMatrix({
+    containerId: "matrix-body",
+    stagebarId: "matrix-stagebar",
+    columns,
+    sections: data.sections,
+    notes: data.notes,
+  });
+
+  document.getElementById("sg-source-note").innerHTML =
+    `Last verified: ${data._meta.lastUpdated}. ${data._meta.stageNote}.`;
+}
+init();
+</script>
+</body>
+</html>
