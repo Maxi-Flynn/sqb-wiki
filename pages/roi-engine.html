@@ -35,21 +35,13 @@
 
 <div class="panel" id="tab-today" style="padding:0 16px">
   <div class="event-banner">
-    <div class="eb-label">Active Scoring Window</div>
-    <div class="eb-name" id="today-event">No major event active</div>
-    <div class="eb-timer" id="today-timer">Set your current event below to get tailored guidance</div>
+    <div class="eb-label">Active scoring stack</div>
+    <div class="eb-name" id="today-event">No events selected</div>
+    <div class="eb-timer" id="today-timer">Add events below — stack multiples when overlaps are live</div>
   </div>
-  <div class="filters" style="margin-bottom:16px">
-    <div class="chip active" data-today="none">None</div>
-    <div class="chip" data-today="kvk">KvK</div>
-    <div class="chip" data-today="sg">Str. Gov</div>
-    <div class="chip" data-today="arm1">Armament T1</div>
-    <div class="chip" data-today="arm2">Armament T2</div>
-    <div class="chip" data-today="op1">Officer T1</div>
-    <div class="chip" data-today="op2">Officer T2</div>
-  </div>
-  <div id="today-content">
-    <div class="note-box">Select the event that's currently live in your kingdom above.</div>
+  <div id="today-stack-ui"></div>
+  <div id="today-content" style="margin-top:16px">
+    <div class="note-box">Example: <strong>SG Stage 6</strong> + <strong>All Out Day 2</strong>, or <strong>Brawl Stage 2</strong> + <strong>Treasure Raiders</strong>.</div>
   </div>
 </div>
 
@@ -63,8 +55,23 @@
 </div>
 
 <script src="../js/common.js"></script>
+<script src="../js/today-engine.js"></script>
 <script>
-let resourceData, todayData, windowData;
+let resourceData, eventsCatalog, windowData;
+let todayStack = loadTodayStack();
+
+async function refreshToday(stack) {
+  todayStack = stack;
+  await renderTodayStacked({
+    stack,
+    catalog: eventsCatalog,
+    resources: resourceData.resources,
+    events: resourceData.events,
+    bannerEl: document.getElementById("today-event"),
+    timerEl: document.getElementById("today-timer"),
+    contentEl: document.getElementById("today-content"),
+  });
+}
 
 async function init() {
   mountHeader({
@@ -74,18 +81,21 @@ async function init() {
     activeId: "roi"
   });
 
-  [resourceData, todayData, windowData] = await Promise.all([
+  [resourceData, eventsCatalog, windowData] = await Promise.all([
     loadData("resources.json"),
-    loadData("today.json"),
+    loadData("active-events.json"),
     loadData("windows.json"),
   ]);
 
   renderResourceCards(resourceData.resources, resourceData.events, "resource-list", "all");
-  renderToday(todayData, "none");
   renderWindowList();
 
-  wireChips("[data-filter]", (f) => renderResourceCards(resourceData.resources, resourceData.events, "resource-list", f));
-  wireChips("[data-today]", (k) => renderToday(todayData, k));
+  wireChips("[data-filter]", (f) =>
+    renderResourceCards(resourceData.resources, resourceData.events, "resource-list", f)
+  );
+
+  renderTodayStackUI(document.getElementById("today-stack-ui"), eventsCatalog, refreshToday);
+  await refreshToday(todayStack);
 }
 
 function renderWindowList() {

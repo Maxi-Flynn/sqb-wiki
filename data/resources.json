@@ -11,11 +11,24 @@
     "kvk_d4": { "name": "KvK", "day": "D4 Hero Dev", "icon": "👑" },
     "kvk_d5": { "name": "KvK", "day": "D5 Power Boost", "icon": "👑" },
     "sg": { "name": "Strongest Gov", "day": "matching stage", "icon": "🏆" },
+    "sg_d1": { "name": "Strongest Gov", "day": "S1 City Construction", "icon": "🏆" },
+    "sg_d2": { "name": "Strongest Gov", "day": "S2 Hero Development", "icon": "🏆" },
+    "sg_d3": { "name": "Strongest Gov", "day": "S3 Basic Skills", "icon": "🏆" },
+    "sg_d4": { "name": "Strongest Gov", "day": "S4 Combat Training", "icon": "🏆" },
+    "sg_d5": { "name": "Strongest Gov", "day": "S5 Basic Skills", "icon": "🏆" },
+    "sg_d6": { "name": "Strongest Gov", "day": "S6 Combat Training", "icon": "🏆" },
+    "sg_d7": { "name": "Strongest Gov", "day": "S7 Hero + Gather", "icon": "🏆" },
     "arm1": { "name": "Armament T1", "day": "Mon–Tue", "icon": "🛡️" },
     "arm2": { "name": "Armament T2", "day": "Fri–Sat", "icon": "🛡️" },
     "op1": { "name": "Officer T1", "day": "Wed–Thu", "icon": "⚔️" },
     "op2": { "name": "Officer T2", "day": "Sun–Mon", "icon": "⚔️" },
-    "brawl": { "name": "Alliance Brawl", "day": "6-day", "icon": "🤝" }
+    "brawl": { "name": "Alliance Brawl", "day": "6-day", "icon": "🤝" },
+    "brawl_d1": { "name": "Alliance Brawl", "day": "S1 Rise of the City", "icon": "🤝" },
+    "brawl_d2": { "name": "Alliance Brawl", "day": "S2 Hero Development", "icon": "🤝" },
+    "brawl_d3": { "name": "Alliance Brawl", "day": "S3 Pet Training", "icon": "🤝" },
+    "brawl_d4": { "name": "Alliance Brawl", "day": "S4 Gear Enhancement", "icon": "🤝" },
+    "brawl_d5": { "name": "Alliance Brawl", "day": "S5 Trade Baron", "icon": "🤝" },
+    "brawl_d6": { "name": "Alliance Brawl", "day": "S6 Full-Scale", "icon": "🤝" }
   },
   "resources": [
     {
@@ -36,6 +49,7 @@
         { "ev": "op1", "pts": 12000, "tier": "best" },
         { "ev": "kvk_d5", "pts": 8000, "tier": "good" },
         { "ev": "kvk_d4", "pts": 8000, "tier": "good" },
+        { "ev": "brawl", "pts": 8000, "tier": "good" },
         { "ev": "arm2", "pts": 1600, "tier": "meh" }
       ],
       "verdict": "<strong>Officer Project T1/T2</strong> pays 12K — vastly better than Armament's 1,600. Hold widgets for Officer Project above all."
@@ -47,6 +61,7 @@
         { "ev": "op1", "pts": 6000, "tier": "best" },
         { "ev": "kvk_d5", "pts": 4000, "tier": "good" },
         { "ev": "kvk_d4", "pts": 4000, "tier": "good" },
+        { "ev": "brawl", "pts": 4000, "tier": "good" },
         { "ev": "arm2", "pts": 800, "tier": "meh" }
       ],
       "verdict": "<strong>Officer Project</strong> at 6K crushes Armament's 800. 60 forgehammers = 360K points in OP vs 48K in Armament."
@@ -57,6 +72,7 @@
       "windows": [
         { "ev": "kvk_d2", "pts": 3040, "tier": "best" },
         { "ev": "sg", "pts": 3040, "tier": "best" },
+        { "ev": "brawl", "pts": 3040, "tier": "good" },
         { "ev": "arm1", "pts": 125, "tier": "meh" },
         { "ev": "op2", "pts": 125, "tier": "meh" }
       ],
@@ -68,6 +84,7 @@
       "windows": [
         { "ev": "kvk_d2", "pts": 1220, "tier": "best" },
         { "ev": "sg", "pts": 1220, "tier": "best" },
+        { "ev": "brawl", "pts": 1220, "tier": "good" },
         { "ev": "arm1", "pts": 50, "tier": "meh" },
         { "ev": "op2", "pts": 50, "tier": "meh" }
       ],
@@ -79,6 +96,7 @@
       "windows": [
         { "ev": "kvk_d2", "pts": 350, "tier": "best" },
         { "ev": "sg", "pts": 350, "tier": "best" },
+        { "ev": "brawl", "pts": 350, "tier": "good" },
         { "ev": "arm1", "pts": 15, "tier": "meh" },
         { "ev": "op2", "pts": 15, "tier": "meh" }
       ],
@@ -90,7 +108,8 @@
       "windows": [
         { "ev": "kvk_d2", "pts": 8000, "tier": "best" },
         { "ev": "kvk_d3", "pts": 8000, "tier": "best" },
-        { "ev": "sg", "pts": 8000, "tier": "best" }
+        { "ev": "sg", "pts": 8000, "tier": "best" },
+        { "ev": "brawl", "pts": 8000, "tier": "good" }
       ],
       "verdict": "8,000 per spin in <strong>KvK D2, D3</strong> and SG. Time spins to these windows if keys trigger roulette."
     },
@@ -100,6 +119,7 @@
       "windows": [
         { "ev": "kvk_d1", "pts": 30, "tier": "best" },
         { "ev": "sg", "pts": 30, "tier": "best" },
+        { "ev": "brawl", "pts": 30, "tier": "good" },
         { "ev": "op1", "pts": 30, "tier": "best", "note": "via milestones" },
         { "ev": "arm1", "pts": 1, "tier": "meh" },
         { "ev": "arm2", "pts": 1, "tier": "meh" }
@@ -112,6 +132,7 @@
       "windows": [
         { "ev": "kvk_d1", "pts": 30, "tier": "best" },
         { "ev": "sg", "pts": 30, "tier": "best" },
+        { "ev": "brawl", "pts": 30, "tier": "good" },
         { "ev": "arm1", "pts": 1, "tier": "meh" }
       ],
       "verdict": "30 pts/min in <strong>KvK D1 / SG</strong>. Save research speedups for these."
@@ -122,6 +143,7 @@
       "windows": [
         { "ev": "kvk_d1", "pts": 30, "tier": "best" },
         { "ev": "sg", "pts": 30, "tier": "best" },
+        { "ev": "brawl", "pts": 30, "tier": "good" },
         { "ev": "brawl", "pts": 30, "tier": "good", "note": "training day" }
       ],
       "verdict": "30 pts/min in <strong>KvK, SG, Alliance Brawl</strong> training windows. Brawl is the easy filler."
@@ -142,7 +164,8 @@
       "windows": [
         { "ev": "kvk_d3", "pts": 15000, "tier": "best" },
         { "ev": "kvk_d5", "pts": 15000, "tier": "best" },
-        { "ev": "sg", "pts": 15000, "tier": "best", "note": "stage 7" }
+        { "ev": "sg", "pts": 15000, "tier": "best", "note": "stage 7" },
+        { "ev": "brawl", "pts": 15000, "tier": "good" }
       ],
       "verdict": "15,000 pts in <strong>KvK D3 (Pet Training), D5, SG stage 7</strong>. Nothing else scores these — hold."
     },
@@ -152,7 +175,8 @@
       "windows": [
         { "ev": "kvk_d3", "pts": 1150, "tier": "best" },
         { "ev": "kvk_d5", "pts": 1150, "tier": "best" },
-        { "ev": "sg", "pts": 1150, "tier": "best" }
+        { "ev": "sg", "pts": 1150, "tier": "best" },
+        { "ev": "brawl", "pts": 1150, "tier": "good" }
       ],
       "verdict": "1,150 in the same pet windows. Great for closing a Pet Power gap while scoring big."
     },
@@ -174,7 +198,8 @@
       "windows": [
         { "ev": "kvk_d1", "pts": 6000, "tier": "best" },
         { "ev": "kvk_d3", "pts": 6000, "tier": "best" },
-        { "ev": "kvk_d5", "pts": 6000, "tier": "best" }
+        { "ev": "kvk_d5", "pts": 6000, "tier": "best" },
+        { "ev": "brawl", "pts": 3000, "tier": "good", "note": "Brawl D2 hero day" }
       ],
       "verdict": "6,000 per mission across <strong>KvK D1, D3, D5</strong>. Excellent flexible filler."
     },
@@ -196,6 +221,7 @@
         { "ev": "kvk_d4", "pts": 70, "tier": "best" },
         { "ev": "op1", "pts": 70, "tier": "best" },
         { "ev": "kvk_d1", "pts": 70, "tier": "good" },
+        { "ev": "brawl", "pts": 70, "tier": "good" },
         { "ev": "kvk_d3", "pts": 70, "tier": "good" }
       ],
       "verdict": "70 pts per charm score in <strong>KvK D4 and Officer T1</strong>."
@@ -206,6 +232,7 @@
       "windows": [
         { "ev": "kvk_d5", "pts": 36, "tier": "best" },
         { "ev": "sg", "pts": 36, "tier": "good", "note": "stage 6/7" },
+        { "ev": "brawl", "pts": 36, "tier": "good" },
         { "ev": "arm1", "pts": 3, "tier": "meh" }
       ],
       "verdict": "Governor gear score pays 36 in <strong>KvK D5 / SG</strong> vs 3 in Armament."

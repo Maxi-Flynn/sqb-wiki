@@ -151,6 +151,26 @@ Block types: `section`, `list`, `table`, `callout`. Rendering lives in `renderGu
 
 ---
 
+## Today tab — stacked active events
+
+Files: `data/active-events.json`, `data/resources.json`, `js/today-engine.js`
+
+The Today tab lets players **stack multiple live events** (e.g. SG Stage 6 + All Out Day 2) and pick **day/stage** per event. Guidance is computed from:
+
+- **Matrix events** (SG, KvK) — `sg-matrix.json` / `kvk-matrix.json` use/skip/prep cells
+- **Brawl** — per-day resource lists in `active-events.json`
+- **Single-window events** — Armament, Officer Project
+- **Combat-only** — All Out (PvP kills, no resource spend)
+- **Notes** — Treasure Raiders (pickaxes are separate)
+
+Selections persist in `localStorage` (`sqb-today-stack`). **Double dip** items appear when the same resource scores in 2+ active events — combined point totals shown.
+
+To add a new event: add an entry to `active-events.json` and ensure `resources.json` has point values under `brawl`, `sg`, or day-specific keys (`sg_d6`, `kvk_d3`, etc.).
+
+Legacy `data/today.json` is unused by the Today tab but kept for reference.
+
+---
+
 ## Updating the calendar / milestones
 
 File: `data/windows.json`

@@ -1,0 +1,86 @@
+{
+  "_meta": {
+    "description": "Events available on the Today tab. Multi-day events pick a day; stack multiple active events for overlap/double-dip guidance."
+  },
+  "events": [
+    {
+      "id": "sg",
+      "name": "Strongest Governor",
+      "icon": "🏆",
+      "type": "matrix",
+      "matrixFile": "sg-matrix.json",
+      "prefix": "sg",
+      "dayLabel": "Stage"
+    },
+    {
+      "id": "kvk",
+      "name": "Kingdom of Power (KvK)",
+      "icon": "👑",
+      "type": "matrix",
+      "matrixFile": "kvk-matrix.json",
+      "prefix": "kvk",
+      "dayLabel": "Day"
+    },
+    {
+      "id": "brawl",
+      "name": "Alliance Brawl",
+      "icon": "🤝",
+      "type": "brawl",
+      "dayLabel": "Stage",
+      "days": [
+        { "num": 1, "name": "Rise of the City", "resources": ["construction", "research", "training", "truegold"] },
+        { "num": 2, "name": "Hero Development", "resources": ["intel", "mythic_shard", "epic_shard", "rare_shard", "roulette"] },
+        { "num": 3, "name": "Pet Training", "resources": ["adv_taming", "common_taming"] },
+        { "num": 4, "name": "Gear Enhancement", "resources": ["forgehammer", "widget", "chief_gear", "charms"] },
+        { "num": 5, "name": "Trade Baron", "resources": ["gather", "construction", "research", "training"] },
+        { "num": 6, "name": "Full-Scale Competition", "resources": ["construction", "research", "training", "troops", "forgehammer", "widget", "mithril", "mythic_shard", "epic_shard", "rare_shard", "adv_taming", "common_taming", "chief_gear", "charms", "intel", "roulette", "truegold"] }
+      ]
+    },
+    {
+      "id": "allout",
+      "name": "All Out (Kill Event)",
+      "icon": "💀",
+      "type": "combat",
+      "dayLabel": "Day",
+      "days": [
+        { "num": 1, "name": "Day 1" },
+        { "num": 2, "name": "Day 2" }
+      ]
+    },
+    {
+      "id": "treasure",
+      "name": "Treasure Raiders",
+      "icon": "⛏️",
+      "type": "note",
+      "note": "Pickaxe floors — pickaxes don't score in other events. If Brawl overlaps, spend <strong>shared resources</strong> (shards, forgehammers, speedups) toward the Brawl day theme; use pickaxes on Treasure separately."
+    },
+    {
+      "id": "arm1",
+      "name": "Armament T1",
+      "icon": "🛡️",
+      "type": "single",
+      "scoreKey": "arm1"
+    },
+    {
+      "id": "arm2",
+      "name": "Armament T2",
+      "icon": "🛡️",
+      "type": "single",
+      "scoreKey": "arm2"
+    },
+    {
+      "id": "op1",
+      "name": "Officer Project T1",
+      "icon": "⚔️",
+      "type": "single",
+      "scoreKey": "op1"
+    },
+    {
+      "id": "op2",
+      "name": "Officer Project T2",
+      "icon": "⚔️",
+      "type": "single",
+      "scoreKey": "op2"
+    }
+  ]
+}
