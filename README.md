@@ -2,7 +2,7 @@
 
 A mobile-first static site for the SQB alliance (Kingdom #1762) in **Kingshot**. Cheat sheets, timing matrices, and a resource-to-event ROI engine, built from alliance chat + community research + in-game screenshots.
 
-**Live once deployed:** `https://trusstopher.github.io/sqb-wiki/`
+**Live:** `https://maxi-flynn.github.io/sqb-wiki/`
 
 ---
 
