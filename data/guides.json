@@ -286,6 +286,65 @@
       ]
     },
     {
+      "id": "formation-preset-priority",
+      "category": "pvp",
+      "gen": 3,
+      "title": "Formation Presets — What to Save (1–8 Slots)",
+      "icon": "💾",
+      "summary": "Priority order for saved march formations on a Gen 3 account",
+      "collapsible": false,
+      "blocks": [
+        {
+          "type": "section",
+          "title": "How to read this",
+          "body": "Assumes an <strong>active Gen 3 alliance member</strong> (Bear every 2 days, some PvP, occasional AC/Vikings). Slots = saved <strong>troop ratios</strong>; swap heroes at send time. Priority = frequency × cost of getting it wrong × how unique the split is."
+        },
+        {
+          "type": "table",
+          "headers": ["Slot", "Preset name", "Ratio (Inf/Cav/Arch)", "Heroes (Gen 3)", "Covers"],
+          "rows": [
+            ["1", "Bear Hunt joiner", "0 / 20 / 80", "Chenko · Amadeus · Yeonwoo — or troops only", "Bear Trap joins (most members join more than lead)"],
+            ["2", "Attack / AC / solo", "50 / 20 / 30", "Attack: Amadeus · Petra · Marlin · Solo/AC: Amadeus · Petra · Jaeger", "Attack rallies, castle/turrets/outposts, solo PvP, Alliance Championship"],
+            ["3", "Bear Hunt lead", "10 / 10 / 80", "Amadeus · Petra · Merlin", "Leading Bear Trap rallies"],
+            ["4", "Garrison", "60 / 15 / 25", "Eric · Jaeger · Hilde (join: Saul)", "Castle, outposts, flags, PvP ally reinforce"],
+            ["5", "Gathering", "100 / 0 / 0", "Olive / Forrest / Edwin / Seth", "Map gathering — highest load tier, one resource per preset"],
+            ["6", "Counter vs infantry", "30 / 20 / 50", "Same as attack lineup", "Attack vs infantry-heavy garrisons (scout first)"],
+            ["7", "Heavy defense / stall", "70 / 10 / 20", "Garrison/defender lineup", "KvK stall, emergency city defense, SOS reinforce"],
+            ["8", "Viking reinforce", "60 / 40 / 0", "Chenko · Amadeus · Yeonwoo — not Saul/Gordon", "Viking Vengeance ally reinforce (kills, not hold)"]
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "<strong>Slot 1 swap:</strong> If you <em>lead</em> bears more than you join, make slot 1 <strong>Bear lead 10/10/80</strong> and bump joiner to slot 3."
+        },
+        {
+          "type": "list",
+          "title": "Don't waste slots — these share one preset",
+          "items": [
+            "Attack rally = AC = solo PvP = outpost attack → all <strong>50/20/30</strong>",
+            "Castle garrison ≈ outpost hold → both <strong>60/15/25</strong>",
+            "Bear lead, bear join, gather, and Viking reinforce each need their <em>own</em> slot"
+          ]
+        },
+        {
+          "type": "list",
+          "title": "Role variants",
+          "items": [
+            "<strong>Join bears only, never lead:</strong> 1 Join → 2 Attack → 3 Garrison (skip bear lead until slot 4+).",
+            "<strong>R4/R5 bear lead:</strong> 1 Lead → 2 Attack → 3 Join.",
+            "<strong>Gather/farm alt:</strong> Move Gathering to slot 2 or 3 if the account rarely fights.",
+            "<strong>Slot 8 alt:</strong> Counter vs cavalry <strong>60/10/30</strong> instead of Viking preset if you scout PvP often and rarely play Vikings."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warn",
+          "text": "<strong>Gen 4 prep:</strong> Replace bear <em>lead</em> with <strong>1/10/89</strong> and verify the 5,000 infantry floor. Joiner stays 0/20/80."
+        }
+      ]
+    },
+    {
       "id": "alliance-championship",
       "category": "events",
       "gen": 3,
