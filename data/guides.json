@@ -1,10 +1,276 @@
 {
   "_meta": {
-    "description": "Alliance-sourced cheat sheets, cataloged from SQT/SQB chat."
+    "description": "Alliance-sourced cheat sheets: troop comps, hero lineups, event timing.",
+    "lastUpdated": "2026-08-01",
+    "defaultGen": 3,
+    "sourceNote": "Comp guides cross-checked against kingshotguide.org, kingshotmastery.com, kingshotwiki.com. SQB should verify against alliance practice."
   },
   "guides": [
     {
+      "id": "bear-trap-lead",
+      "category": "bear-trap",
+      "gen": 3,
+      "title": "Bear Trap — Rally Lead",
+      "icon": "🐻",
+      "summary": "Best heroes & troop split when you are leading the rally",
+      "blocks": [
+        {
+          "type": "list",
+          "title": "Best heroes (Gen 3 lead)",
+          "items": [
+            "<strong>Best overall:</strong> Amadeus · Petra · Merlin",
+            "<strong>Low-spender alt:</strong> Zoe · Petra · Merlin",
+            "<strong>F2P fallback:</strong> Zoe · Jabel · Quinn",
+            "Use attack/rally widgets — not economy heroes (don't use Diana over Quinn)"
+          ]
+        },
+        {
+          "type": "table",
+          "headers": ["Generation", "Infantry", "Cavalry", "Archers"],
+          "rows": [
+            ["Gen 1", "10%", "30%", "60%"],
+            ["Gen 2", "10%", "20%", "70%"],
+            ["Gen 3 ← K1762", "10%", "10%", "80%"],
+            ["Gen 4+", "1%", "10%", "89%"]
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warn",
+          "text": "<strong>5,000 Infantry floor (Gen 4+):</strong> At 1/10/89, check absolute troop count — if 1% is under 5,000 infantry, bump infantry % until you're above the floor or damage gets penalized."
+        },
+        {
+          "type": "list",
+          "title": "Leader checklist",
+          "items": [
+            "Fill rally to your max capacity — leader sets total troop cap.",
+            "Bear deals no return damage; prioritize archer-weighted damage over survival.",
+            "Coordinate with R4/R5 on how many rallies to run vs how many joiners are online.",
+            "Upgrade Bear Trap building — each level adds +5% attack to all troop types in the event."
+          ]
+        }
+      ],
+      "note": "Widgets matter for rally lead. Marlin (attack widget) beats Jaeger on rally lead even though Jaeger has higher raw stats for solo marches."
+    },
+    {
+      "id": "bear-trap-join",
+      "category": "bear-trap",
+      "gen": 3,
+      "title": "Bear Trap — Joining Rallies",
+      "icon": "🎯",
+      "summary": "Joiner heroes, troop splits & the 2–3 vs 4–5 rally question",
+      "blocks": [
+        {
+          "type": "section",
+          "title": "How joiners actually work",
+          "body": "Joiners contribute <strong>their own troops</strong> (which inherit the leader's stats/buffs) plus <strong>only the 1st skill of their 1st hero</strong>. The game picks the <strong>top 4 highest-level joiner skills</strong> across the whole rally. Hero slot order beyond #1 does not matter for joiners."
+        },
+        {
+          "type": "table",
+          "headers": ["Joiner hero tier", "Examples (Gen 3+)", "Why"],
+          "rows": [
+            ["S — send in slot 1", "Chenko, Amadeus, Yeonwoo", "Flat lethality / attack buffs — stack multiplicatively"],
+            ["A — good mix", "Amane, Margot, Vivian, Wee & Woo, Ava", "Pairs well with Chenko-type; don't stack duplicates blindly"],
+            ["Do not send", "Howard, Gordon, Saul, Fahd, Diana", "Defensive or economy skills can displace a good damage skill"],
+            ["Troops only", "No hero (empty slot 1)", "Valid and often correct — see strategy below"]
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Joiner troop ratio",
+          "body": "Send <strong>0% infantry</strong> as a joiner. Split capacity <strong>20% cavalry / 80% archers</strong> (e.g. 14K cav + 55K arch on a 69K march). Your troops still count toward personal damage score and help the rally."
+        },
+        {
+          "type": "list",
+          "title": "2–3 full rallies vs 4–5 thin rallies?",
+          "items": [
+            "<strong>Fewer, fuller rallies usually win</strong> when coordination allows. Top-4 joiner skill cap means spreading heroes across 5 rallies dilutes buffs.",
+            "R4/R5 count online joiners with S-tier heroes before opening rallies.",
+            "Run <strong>2–3 rallies</strong> with full troops + assigned Chenko/Amadeus/Yeonwoo until top-4 skills are filled.",
+            "Once 4 strong joiner skills are locked, extra members send <strong>troops only</strong> — never a bad hero.",
+            "Open a 4th/5th rally only if unused S-tier joiners remain AND troops can fill it.",
+            "<strong>Hero + no troops?</strong> Rarely worth it — sacrifices personal score and rally mass.",
+            "<strong>Hero + troops in many rallies?</strong> Only if each rally gets a unique high-level joiner skill."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "<strong>Alliance callout in chat:</strong> \"Rally 1 needs Chenko + Amadeus — who's got Yeonwoo? Everyone else troops-only unless asked.\""
+        }
+      ]
+    },
+    {
+      "id": "pvp-attack",
+      "category": "pvp",
+      "gen": 3,
+      "title": "Attack Rallies — Castles & Structures",
+      "icon": "🏰",
+      "summary": "Hero lineups & formations for taking keeps, turrets & outposts",
+      "blocks": [
+        {
+          "type": "table",
+          "headers": ["Scenario", "Heroes (Gen 3)", "Formation"],
+          "rows": [
+            ["Rally attack (default)", "Amadeus · Petra · Marlin", "50% Inf / 20% Cav / 30% Arch"],
+            ["Solo march / AC", "Amadeus · Petra · Jaeger", "50 / 20 / 30 (widgets don't apply solo)"],
+            ["Vs infantry-heavy garrison", "Amadeus · Petra · Marlin", "30% Inf / 20% Cav / 50% Arch"],
+            ["Double-rally opener", "Amadeus · Petra · Marlin", "Attack first — see garrison guide for 2nd rally"]
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Attack joiners",
+          "body": "Stack offensive joiner skills like Bear Trap: <strong>2× Chenko + 2× Amane</strong> is the damage ceiling; <strong>4× Chenko</strong> is easier to coordinate. Joiner troops inherit leader stats — send a full march when you can."
+        },
+        {
+          "type": "list",
+          "title": "Castle / structure tips",
+          "items": [
+            "Use attack widgets on rally lead — check hero gear before launching.",
+            "Scout the garrison comp when possible and counter infantry-heavy setups with more archers.",
+            "Double-rally: attack rally lands first; garrison rally ~5 seconds behind (separate guide).",
+            "Special buildings (turrets, outposts) use the same attack logic — infantry-heavy defenders mean more archers."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pvp-garrison",
+      "category": "pvp",
+      "gen": 3,
+      "title": "Garrison & Defense — PvP",
+      "icon": "🛡️",
+      "summary": "Holding castles, structures & reinforcing allies under attack",
+      "blocks": [
+        {
+          "type": "table",
+          "headers": ["Role", "Heroes (Gen 3)", "Formation"],
+          "rows": [
+            ["Garrison lead", "Eric · Jaeger · Hilde", "60% Inf / 20% Cav / 20% Arch"],
+            ["Alt garrison lead", "Zoe · Hilde · Saul", "60 / 20 / 20"],
+            ["Garrison joiner (best stack)", "4× Saul", "~2.24× Defense Up (two def types on one skill)"],
+            ["Garrison joiner (easier)", "2× Saul · 2× Gordon", "~2.16× — most alliances start here"],
+            ["Fill slot / no hero", "Troops only", "When leadership assigns a non-hero reinforcement slot"]
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Garrison joiner mechanics",
+          "body": "Garrison strength comes from <strong>stacking the same defensive skill type</strong> across joiners — not from one superstar lead. Mismatched joiner heroes waste slots. Follow R4/R5 assignments; default to <strong>Saul</strong> if unsure."
+        },
+        {
+          "type": "list",
+          "title": "While holding a structure",
+          "items": [
+            "Watch infantry count — if it drops, queue an infantry-heavy reinforcement rally.",
+            "Use garrison/defender widgets on lead heroes, not attack widgets.",
+            "Voice chat helps for double-rally timing and reinforcement calls.",
+            "If attack rally captures first, recall attack heroes before garrison lands so defenders swap in."
+          ]
+        }
+      ],
+      "note": "Reinforcing an ally's city under PvP attack = same garrison joiner logic (Saul/Gordon stack). See Vikings guide for Viking Vengeance — different goal (kills vs survival)."
+    },
+    {
+      "id": "vikings",
+      "category": "pvp",
+      "gen": 3,
+      "title": "Viking Vengeance — Reinforcement",
+      "icon": "⚓",
+      "summary": "NOT the same as PvP garrison — optimize for kills, not survival",
+      "blocks": [
+        {
+          "type": "callout",
+          "variant": "warn",
+          "text": "<strong>Key difference from PvP garrison:</strong> Vikings score on <strong>kills</strong>, not holding. Use <strong>Bear Hunt lethality heroes</strong> when reinforcing allies — NOT Howard/Gordon/Saul defensive stacks."
+        },
+        {
+          "type": "table",
+          "headers": ["Situation", "Heroes", "Troops"],
+          "rows": [
+            ["Your city — Guard Station", "Your 3 strongest (stay home)", "Do NOT send these out"],
+            ["Reinforcing allies", "Chenko, Amadeus, Yeonwoo, Amane (slot 1)", "Infantry first, then cavalry — skip archers early"],
+            ["HQ wave 10 & 20", "Strongest available march recalled", "Infantry-heavy (e.g. 90/10/0 or shield inf stack)"],
+            ["Your city during waves", "Keep Guard Station heroes", "Empty city — let reinforcements get kills"]
+          ]
+        },
+        {
+          "type": "list",
+          "title": "Viking rules of thumb",
+          "items": [
+            "Send infantry/cavalry out to reinforce — troops at home earn almost nothing.",
+            "After wave 9 / 19 ends, pull one march back for HQ defense on wave 10 / 20, then return to reinforcing.",
+            "Waves 7, 14, 17 hit online players only — prioritize reinforcing active members before those.",
+            "Gen 3 Guard Station example: Amadeus · Jabel · Saul (adjust to your roster)."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gathering",
+      "category": "gathering",
+      "title": "Resource Gathering — Heroes & Marches",
+      "icon": "🌾",
+      "summary": "One Rare hero per resource; 100% single troop type per march",
+      "blocks": [
+        {
+          "type": "table",
+          "headers": ["Resource", "Hero", "Wilderness skill"],
+          "rows": [
+            ["Bread", "Olive", "Forager's Luck (+25% at Lv5)"],
+            ["Wood", "Forrest", "Master Woodcutter"],
+            ["Stone", "Edwin", "Stone Mining"],
+            ["Iron", "Seth", "Craftsmanship"]
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Troop setup",
+          "body": "Send <strong>100% of one troop type</strong> per march (not a combat split). Use your <strong>highest load-tier</strong> troops so the node clears in one trip. Match gathering research buffs to the troop type you're sending when possible."
+        },
+        {
+          "type": "list",
+          "title": "Efficiency tips",
+          "items": [
+            "Target level 6–8 tiles when your march capacity allows — higher yield per trip.",
+            "Send enough troops to clear the node in one trip; partial loads waste time.",
+            "Inside alliance territory = gathering speed bonus from alliance tech.",
+            "Early game: Gordon (+25% speed & +25% march capacity) until blue heroes are leveled.",
+            "Planning ratio for stockpiles: roughly 20 bread : 20 wood : 4 stone : 1 iron."
+          ]
+        }
+      ],
+      "note": "During gathering events, match the hero to the resource the event scores — verify the live task list before committing all marches."
+    },
+    {
+      "id": "solo-pvp",
+      "category": "pvp",
+      "gen": 3,
+      "title": "Solo Marches & Misc Combat",
+      "icon": "⚔️",
+      "summary": "Field battles, AC, Bear-adjacent activities",
+      "blocks": [
+        {
+          "type": "table",
+          "headers": ["Activity", "Heroes (Gen 3)", "Notes"],
+          "rows": [
+            ["Solo PvP attack", "Amadeus · Petra · Jaeger", "Widgets don't apply — raw stats win"],
+            ["Alliance Championship", "Amadeus · Petra · Jaeger", "Same as solo; prep preset saves time"],
+            ["Bear Trap (reference)", "See Bear Trap guides", "Rally mechanics differ from solo"],
+            ["Intel / map PvE", "Combat heroes", "Standard 50/20/30 unless countering"]
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "<strong>Rule of thumb:</strong> Rally/garrison = check widgets. Solo = ignore widgets, pick highest stat heroes."
+        }
+      ]
+    },
+    {
       "id": "mystic-trial",
+      "category": "events",
       "title": "Mystic Trial — Troop Compositions",
       "icon": "🔮",
       "summary": "Optimal Infantry/Archer/Cavalry ratios per zone",
@@ -24,6 +290,7 @@
     },
     {
       "id": "golden-glaives",
+      "category": "events",
       "title": "Golden Glaives — Watchtower Timing",
       "icon": "🗼",
       "summary": "Complete-but-don't-claim strategy to carry Watchtower rewards into event scoring",

@@ -10,51 +10,105 @@
 
 <div class="header"></div>
 
-<div style="padding:16px">
-  <div class="intro">Cheat sheets collected from alliance chat. Have one to add? Drop a screenshot in the alliance thread.</div>
+<div style="padding:16px 16px 0">
+  <div class="intro">Hero lineups, troop ratios & strategy — from alliance chat + community research. Gen 3 baseline for K1762; verify heroes against your roster.</div>
+  <div class="filters" style="margin-bottom:16px">
+    <div class="chip active" data-filter="all">All</div>
+    <div class="chip" data-filter="bear-trap">🐻 Bear Trap</div>
+    <div class="chip" data-filter="pvp">⚔ PvP & Defense</div>
+    <div class="chip" data-filter="gathering">🌾 Gathering</div>
+    <div class="chip" data-filter="events">🎯 Events</div>
+  </div>
+</div>
+
+<div style="padding:0 16px 16px">
   <div id="guide-list"></div>
 </div>
 
 <script src="../js/common.js"></script>
 <script>
+let guideData = [];
+
+function renderGuides(filter = "all") {
+  const list = document.getElementById("guide-list");
+  const filtered = guideData.filter(
+    (g) => filter === "all" || g.category === filter
+  );
+
+  if (!filtered.length) {
+    list.innerHTML = `<div class="note-box">No guides in this category yet.</div>`;
+    return;
+  }
+
+  list.innerHTML = filtered
+    .map((g) => {
+      const genBadge = g.gen
+        ? `<span class="lock-badge" style="margin-left:6px">Gen ${g.gen}</span>`
+        : "";
+      const content = renderGuideContent(g);
+      const collapsible = g.collapsible !== false;
+
+      if (!collapsible) {
+        return `
+          <div class="card" data-category="${g.category}">
+            <div class="card-head" style="cursor:default">
+              <div class="card-icon">${g.icon}</div>
+              <div class="card-name-wrap">
+                <div class="card-name">${g.title}${genBadge}</div>
+                <div class="card-tag">${g.summary}</div>
+              </div>
+            </div>
+            <div class="card-detail open" style="display:block;padding-top:0">
+              ${content}
+              ${g.note && g.blocks ? `<div class="verdict" style="margin-top:12px">${g.note}</div>` : ""}
+            </div>
+          </div>`;
+      }
+
+      return `
+        <div class="card" data-category="${g.category}">
+          <div class="card-head">
+            <div class="card-icon">${g.icon}</div>
+            <div class="card-name-wrap">
+              <div class="card-name">${g.title}${genBadge}</div>
+              <div class="card-tag">${g.summary}</div>
+            </div>
+            <div class="card-chevron">▼</div>
+          </div>
+          <div class="card-detail">
+            ${content}
+            ${g.note && g.blocks ? `<div class="verdict" style="margin-top:12px">${g.note}</div>` : ""}
+          </div>
+        </div>`;
+    })
+    .join("");
+
+  list.querySelectorAll(".card-head").forEach((head) => {
+    if (head.style.cursor === "default") return;
+    head.addEventListener("click", () => {
+      const card = head.closest(".card");
+      const detail = card.querySelector(".card-detail");
+      const chevron = card.querySelector(".card-chevron");
+      detail.classList.toggle("open");
+      chevron.textContent = detail.classList.contains("open") ? "▲" : "▼";
+    });
+  });
+}
+
 async function init() {
   mountHeader({
-    eyebrow: "SQB Alliance · Kingdom #1762",
+    eyebrow: "SQB Alliance · Kingdom #1762 · Gen 3",
     title: "📜 Alliance Guides",
-    sub: "Cheat sheets, comps & timing tricks — straight from alliance chat",
+    sub: "Troop comps, hero lineups & event cheat sheets",
     activeId: "guides"
   });
 
   const data = await loadData("guides.json");
-  const list = document.getElementById("guide-list");
-
-  list.innerHTML = data.guides.map(g => {
-    const tableHtml = `
-      <table style="width:100%;border-collapse:collapse;margin-top:10px;font-size:11px">
-        <thead>
-          <tr>${g.table.headers.map(h => `<th style="text-align:left;padding:6px 8px;color:var(--gold-dim);border-bottom:1px solid var(--border);font-size:10px;text-transform:uppercase;letter-spacing:0.5px">${h}</th>`).join('')}</tr>
-        </thead>
-        <tbody>
-          ${g.table.rows.map(row => `<tr>${row.map(cell => `<td style="padding:6px 8px;border-bottom:1px solid var(--border);color:var(--text-dim)">${cell}</td>`).join('')}</tr>`).join('')}
-        </tbody>
-      </table>`;
-
-    return `
-      <div class="card">
-        <div class="card-head" style="cursor:default">
-          <div class="card-icon">${g.icon}</div>
-          <div class="card-name-wrap">
-            <div class="card-name">${g.title}</div>
-            <div class="card-tag">${g.summary}</div>
-          </div>
-        </div>
-        <div class="card-detail open" style="display:block">
-          ${tableHtml}
-          <div class="verdict" style="margin-top:12px">${g.note}</div>
-        </div>
-      </div>`;
-  }).join('');
+  guideData = data.guides;
+  renderGuides("all");
+  wireChips("[data-filter]", renderGuides);
 }
+
 init();
 </script>
 </body>

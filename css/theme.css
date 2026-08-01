@@ -256,6 +256,47 @@ a:hover { text-decoration: underline; }
   text-align: center; font-size: 10px; color: var(--text-faint); padding: 20px 16px 0; line-height: 1.5;
 }
 
+/* ── Guide blocks (comps, strategy) ── */
+.guide-section { margin-top: 14px; }
+.guide-section:first-child { margin-top: 0; }
+.guide-section-title {
+  font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 1px;
+  color: var(--gold); margin-bottom: 8px; padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+.guide-body {
+  font-size: 11px; color: var(--text-dim); line-height: 1.65;
+}
+.guide-body strong { color: var(--text); }
+.guide-list {
+  margin: 0; padding-left: 18px; font-size: 11px; color: var(--text-dim); line-height: 1.65;
+}
+.guide-list li { margin-bottom: 6px; }
+.guide-list li:last-child { margin-bottom: 0; }
+.guide-table {
+  width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 11px;
+}
+.guide-table th {
+  text-align: left; padding: 6px 8px; color: var(--gold-dim);
+  border-bottom: 1px solid var(--border); font-size: 10px;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.guide-table td {
+  padding: 6px 8px; border-bottom: 1px solid var(--border); color: var(--text-dim);
+  vertical-align: top;
+}
+.guide-callout {
+  margin-top: 12px; padding: 10px 12px; border-radius: 6px; font-size: 11px; line-height: 1.6;
+  border-left: 3px solid var(--gold-dim); background: var(--surface); color: var(--text-dim);
+}
+.guide-callout.warn {
+  border-left-color: var(--hold); background: #1A1208;
+}
+.guide-callout.tip {
+  border-left-color: var(--best);
+}
+.guide-callout strong { color: var(--gold); }
+
 @media (max-width: 480px) {
   .matrix-rowlabel .pts { display: none; }
 }

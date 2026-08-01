@@ -210,6 +210,54 @@ function renderToday(todayData, key) {
   content.innerHTML = html;
 }
 
+/** Render one guide content block (table, section, list, callout) */
+function renderGuideBlock(block) {
+  if (block.type === "section") {
+    const body = block.body ? `<div class="guide-body">${block.body}</div>` : "";
+    return `<div class="guide-section"><div class="guide-section-title">${block.title}</div>${body}</div>`;
+  }
+  if (block.type === "list") {
+    const items = (block.items || [])
+      .map((item) => `<li>${item}</li>`)
+      .join("");
+    const title = block.title ? `<div class="guide-section-title">${block.title}</div>` : "";
+    return `<div class="guide-section">${title}<ul class="guide-list">${items}</ul></div>`;
+  }
+  if (block.type === "callout") {
+    const variant = block.variant || "tip";
+    return `<div class="guide-callout ${variant}">${block.text}</div>`;
+  }
+  if (block.type === "table" || block.headers) {
+    const headers = block.headers || [];
+    const rows = block.rows || [];
+    return `
+      <table class="guide-table">
+        <thead>
+          <tr>${headers.map((h) => `<th>${h}</th>`).join("")}</tr>
+        </thead>
+        <tbody>
+          ${rows.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join("")}</tr>`).join("")}
+        </tbody>
+      </table>`;
+  }
+  return "";
+}
+
+/** Render guide blocks array, or legacy table + note */
+function renderGuideContent(guide) {
+  if (guide.blocks && guide.blocks.length) {
+    return guide.blocks.map(renderGuideBlock).join("");
+  }
+  let html = "";
+  if (guide.table) {
+    html += renderGuideBlock(guide.table);
+  }
+  if (guide.note) {
+    html += `<div class="verdict" style="margin-top:12px">${guide.note}</div>`;
+  }
+  return html;
+}
+
 /** Generic tab wiring: [data-panel] buttons toggle .panel elements by id */
 function wireTabs() {
   document.querySelectorAll(".tab").forEach((t) => {

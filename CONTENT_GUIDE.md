@@ -103,24 +103,51 @@ SG matrix additionally groups rows into `sections` (e.g. "⚡ Speedups", "🧙 H
 
 File: `data/guides.json`
 
+### Simple guide (table only — legacy shape)
+
 ```json
 {
   "id": "unique-slug",
+  "category": "events",
   "title": "Display Title",
   "icon": "🔮",
   "summary": "One-line description shown on the card",
   "table": {
     "headers": ["Col 1", "Col 2", "Col 3"],
-    "rows": [
-      ["value", "value", "value"],
-      ["value", "value", "value"]
-    ]
+    "rows": [["value", "value", "value"]]
   },
-  "note": "Freeform explanation shown below the table. Plain text or simple HTML."
+  "note": "Freeform explanation below the table. HTML allowed."
 }
 ```
 
-Every guide renders as a card with a table — this works well for the two current guides (troop composition ratios, timing schedules) but isn't the only shape a "guide" could take. If a future cheat sheet doesn't fit a table (e.g. it's a list of steps, or freeform strategy text), the `guides.html` page's render logic will need a small extension to handle a non-table guide type. Flag this if it comes up rather than forcing a table shape that doesn't fit.
+### Rich guide (blocks — troop comps, strategy)
+
+```json
+{
+  "id": "bear-trap-join",
+  "category": "bear-trap",
+  "gen": 3,
+  "title": "Bear Trap — Joining Rallies",
+  "icon": "🎯",
+  "summary": "One-line card subtitle",
+  "blocks": [
+    { "type": "section", "title": "Heading", "body": "Paragraph HTML. <strong>Emphasis</strong> ok." },
+    { "type": "list", "title": "Optional heading", "items": ["Bullet one", "Bullet two"] },
+    { "type": "table", "headers": ["Col A", "Col B"], "rows": [["a", "b"]] },
+    { "type": "callout", "variant": "tip", "text": "Short highlight. Use variant: tip | warn" }
+  ],
+  "note": "Optional footer verdict below all blocks."
+}
+```
+
+| Field | Notes |
+|---|---|
+| `category` | Filter chip on guides page: `bear-trap`, `pvp`, `gathering`, `events` |
+| `gen` | Optional — shows Gen badge on card (e.g. `3` for K1762 baseline) |
+| `collapsible` | Optional — set `false` to always show expanded (default: collapsible) |
+| `blocks` | Array of content blocks; if present, replaces legacy `table`-only layout |
+
+Block types: `section`, `list`, `table`, `callout`. Rendering lives in `renderGuideContent()` in `js/common.js`.
 
 ---
 
