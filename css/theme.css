@@ -263,6 +263,10 @@ a:hover { text-decoration: underline; }
 }
 .today-add-row { margin-top: 8px; }
 .today-add-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-faint); margin-bottom: 6px; }
+.today-intel-foot {
+  margin-top: 8px; font-size: 10px; color: var(--text-faint); line-height: 1.5;
+}
+.today-intel-foot strong { color: var(--gold-dim); font-weight: 600; }
 
 /* ── Homepage tiles ── */
 .tile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 16px; }

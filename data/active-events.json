@@ -55,6 +55,13 @@
       "note": "Pickaxe floors — pickaxes don't score in other events. If Brawl overlaps, spend <strong>shared resources</strong> (shards, forgehammers, speedups) toward the Brawl day theme; use pickaxes on Treasure separately."
     },
     {
+      "id": "gg",
+      "name": "Golden Glaives",
+      "icon": "🗼",
+      "type": "note",
+      "note": "Intel Dim Goldstones score on <strong>claim</strong> during the event — not on completion. Stack KvK + GG on the Today tab when both are live; intel timing callouts appear above spend guidance. See Guides → <strong>Watchtower Intel</strong>."
+    },
+    {
       "id": "arm1",
       "name": "Armament T1",
       "icon": "🛡️",

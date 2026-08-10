@@ -44,6 +44,98 @@ const MATRIX_ROW_TO_RESOURCE = {
 
 const SCOREABLE_CELLS = new Set(["use", "prep"]);
 
+/** KvK prep days where intel scores 6,000 pts per completion */
+const KVK_INTEL_DAYS = new Set([1, 3, 5]);
+
+/** Brawl stages that include intel in scoring */
+const BRAWL_INTEL_DAYS = new Set([2, 6]);
+
+/** Watchtower intel refresh hours (UTC) */
+const INTEL_REFRESH_UTC_HOURS = [0, 8, 16];
+
+function nextIntelRefreshUtc(now = new Date()) {
+  let best = null;
+  for (const hour of INTEL_REFRESH_UTC_HOURS) {
+    const candidate = new Date(now);
+    candidate.setUTCHours(hour, 0, 0, 0);
+    if (candidate <= now) candidate.setUTCDate(candidate.getUTCDate() + 1);
+    if (!best || candidate < best) best = candidate;
+  }
+  return best;
+}
+
+function formatCountdown(ms) {
+  const totalMin = Math.max(0, Math.floor(ms / 60000));
+  const h = Math.floor(totalMin / 60);
+  const m = totalMin % 60;
+  if (h > 0) return `${h}h ${m}m`;
+  return `${m}m`;
+}
+
+function formatUtcClock(date) {
+  return date.toISOString().slice(11, 16);
+}
+
+/** Contextual intel hints when KvK intel days, Brawl intel, or GG are in the stack */
+function buildIntelTimingHints(stack) {
+  const hints = [];
+  const kvkEntry = stack.find((s) => s.id === "kvk");
+  const ggEntry = stack.find((s) => s.id === "gg");
+  const brawlEntry = stack.find((s) => s.id === "brawl");
+  const kvkIntelDay = kvkEntry && KVK_INTEL_DAYS.has(kvkEntry.day);
+  const brawlIntelDay = brawlEntry && BRAWL_INTEL_DAYS.has(brawlEntry.day);
+  const hasGg = !!ggEntry;
+
+  if (!kvkIntelDay && !brawlIntelDay && !hasGg) return null;
+
+  const now = new Date();
+  const nextRefresh = nextIntelRefreshUtc(now);
+  const countdown = formatCountdown(nextRefresh - now);
+  const meta = {
+    utcNow: formatUtcClock(now),
+    nextLabel: formatUtcClock(nextRefresh),
+    countdown,
+  };
+
+  if (kvkIntelDay) {
+    hints.push({
+      variant: "tip",
+      icon: "👑",
+      title: `KvK D${kvkEntry.day} — intel scores on completion`,
+      text: `6,000 pts per mission when you <strong>finish</strong> it today — claim timing does not matter. Missions expire ~15h after spawn (time-based, not a count cap). Next refresh: <strong>${meta.nextLabel} UTC</strong> (in ${countdown}). Optimal prep: skip from <strong>16:00 UTC the prior day</strong>, burst-complete from <strong>00:00 UTC</strong>, clear the oldest batch before <strong>~07:00 UTC</strong>.`,
+    });
+  }
+
+  if (hasGg) {
+    hints.push({
+      variant: "tip",
+      icon: "🗼",
+      title: "Golden Glaives — Dim Goldstones on claim",
+      text: "Complete early, <strong>claim during the event</strong>. Day-before table: 08:00 complete/hold, skip 16:00, event-day 00:00 claim burst. Guides → <strong>Watchtower Intel</strong> for two-cycle stacking (~16 extra dims).",
+    });
+  }
+
+  if (kvkIntelDay && hasGg) {
+    hints.push({
+      variant: "warn",
+      icon: "⚡",
+      title: "KvK + GG overlap",
+      text: "Same mission, two triggers: <strong>complete</strong> for KvK points, <strong>claim</strong> during GG for Dim Goldstones. When both open at 00:00 UTC, plan a completion burst that also leaves rewards to redeem while GG is live.",
+    });
+  }
+
+  if (brawlIntelDay && !kvkIntelDay) {
+    hints.push({
+      variant: "tip",
+      icon: "🤝",
+      title: `Brawl Stage ${brawlEntry.day} — intel scores here`,
+      text: `Same expiration rules — finish missions during this stage. Next refresh: <strong>${meta.nextLabel} UTC</strong> (in ${countdown}).`,
+    });
+  }
+
+  return { hints, meta };
+}
+
 function loadTodayStack() {
   try {
     const raw = localStorage.getItem(TODAY_STORAGE_KEY);
@@ -447,6 +539,20 @@ async function renderTodayStacked({
   );
 
   let html = "";
+
+  const intelBlock = buildIntelTimingHints(stack);
+  if (intelBlock?.hints.length) {
+    const { hints, meta } = intelBlock;
+    html += `<div class="today-section"><div class="today-head spend">🔍 INTEL TIMING</div>`;
+    html += hints
+      .map(
+        (h) =>
+          `<div class="guide-callout ${h.variant}">${h.icon} <strong>${h.title}:</strong> ${h.text}</div>`
+      )
+      .join("");
+    html += `<div class="today-intel-foot">Now <strong>${meta.utcNow} UTC</strong> · next refresh <strong>${meta.nextLabel} UTC</strong> (${meta.countdown}) · Guides → Watchtower Intel</div>`;
+    html += `</div>`;
+  }
 
   if (stackedItems.length) {
     html += `<div class="today-section"><div class="today-head spend">🔥 DOUBLE DIP — scores in multiple active events</div>`;
