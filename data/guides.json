@@ -1,7 +1,7 @@
 {
   "_meta": {
     "description": "Alliance-sourced cheat sheets: troop comps, hero lineups, event timing.",
-    "lastUpdated": "2026-08-10",
+    "lastUpdated": "2026-08-11",
     "defaultGen": 3,
     "sourceNote": "Comp guides cross-checked against kingshotguide.org, kingshotmastery.com, kingshotwiki.com. SQB should verify against alliance practice."
   },
@@ -609,6 +609,123 @@
         ]
       },
       "note": "Dim Goldstones score on <strong>claim</strong>, not completion. Full mechanics, expiration rules, and KvK overlap → <strong>Watchtower Intel — KvK & Golden Glaives Timing</strong> guide."
+    },
+    {
+      "id": "eternitys-reach",
+      "category": "events",
+      "title": "Eternity's Reach — Copper & Skill Tree",
+      "icon": "⛏️",
+      "summary": "30-min safe instance — hunt guards, cycle vein procs, sprint Fracture Veins, snipe Peak in final 7 min",
+      "blocks": [
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "<strong>Safe event map.</strong> Separate battlefield instance — <strong>no troop permadeath</strong>, no attacks on your main city. Veins and the center can be <strong>contested</strong>. If defeated at a mine or in PvP, your hero enters a <strong>~5 minute cooldown</strong> (marches can still go out without heroes)."
+        },
+        {
+          "type": "section",
+          "title": "Event basics",
+          "body": "Bi-weekly solo competitive event (~30 minutes per match). Goal: accumulate the most <strong>copper ore</strong> for rank rewards (Governor Charm materials — top 10 finishes matter). You're matched into a lobby (~100 players, similar server age/power band). <strong>Register same-day</strong> — pick a time slot you can play the full 30 minutes actively (~10–15 min before it opens). Recall all troops before entering the instance."
+        },
+        {
+          "type": "list",
+          "title": "Before the match",
+          "items": [
+            "Pick a time slot you can babysit — this is <strong>not</strong> a background event.",
+            "Recall troops home first; use teleporter if marches are still marching.",
+            "Six march slots help; five well-managed is enough.",
+            "Loot wagon is a <strong>free extra collector</strong> — does not use a march slot. Keep it moving."
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warn",
+          "text": "<strong>Ignore the default advice.</strong> Fighting whales for L3 veins and camping the Peak all match is a trap for most players. Efficiency beats raw power — hunt guards, cycle vein bonuses, and sprint Fracture Veins instead of slow passive mining."
+        },
+        {
+          "type": "table",
+          "title": "Recommended skill path — Right · Right · Left · Left · Right",
+          "headers": ["Tier", "Pick", "Effect", "Why"],
+          "rows": [
+            ["1", "Right", "1,500 copper per Cesares Guard kill", "Core income once hunting loop is online"],
+            ["2", "Right", "+25% march speed", "Faster guard hunts and vein cycling"],
+            ["3", "Left", "5,000 copper when occupying a vein (60s CD)", "★ Most important — the vein proc engine"],
+            ["4", "Left", "+20% gathering efficiency", "Clears Fracture Veins faster during spawn waves"],
+            ["5", "Right", "Active: +50 gather speed for 60s (manual)", "Use on regular veins late — <em>not</em> Fracture Veins"]
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Phase 1 — Early game (first ~10 min): hunt guards",
+          "body": "Focus on killing <strong>Cesares Guards</strong> to earn XP and unlock the skill tree. Target <strong>Level 2 guards</strong> first — more XP than L1, still manageable F2P. Use the <strong>Search / Find</strong> button; skip guards already under attack. <strong>Loot mine guards heavily</strong> — scattered copper piles are a massive boost; send your loot wagon immediately after kills."
+        },
+        {
+          "type": "list",
+          "title": "Guard hunting tips",
+          "items": [
+            "Prioritize L2 guards until skills are unlocked, then keep hunting all match for 1,500 copper/kill.",
+            "Don't stop after max skills — uncontested guards stay on the map.",
+            "Defeated guards drop scattered ore — wagon + manual collection adds up fast.",
+            "Avoid unnecessary PvP — hero cooldowns slow your loop."
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Phase 2 — Mid game: the 60-second vein cycle",
+          "body": "Once <strong>Tier 3 Left</strong> (5,000 copper on vein occupy) is unlocked, add the vein proc loop alongside guard hunting. Every ~60 seconds: <strong>occupy a copper vein → trigger the 5,000 bonus → recall → wait for CD → repeat</strong>. You're farming the <strong>skill proc</strong>, not trying to camp and mine. Use L1 guarded veins if contested — the bonus matters more than holding tier."
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "<strong>Vein tap timing:</strong> Track the event timer (e.g. :00, :01 each minute). Recall around the 40s mark if needed so you can re-send on cooldown. Failed occupies still often pay if the proc fires — don't rage-fight over a contested tile."
+        },
+        {
+          "type": "list",
+          "title": "Mid game priorities",
+          "items": [
+            "Keep the 60s vein cycle running on one dedicated march slot.",
+            "Use remaining slots for guard hunting between vein sends.",
+            "When skills are maxed, gather from <strong>L2 veins</strong> if available (L3 usually whale territory).",
+            "Fall back to L1 veins for steady income — something beats nothing.",
+            "Activate T5 gather boost manually on <strong>regular veins</strong> only — it does not boost Fracture Veins."
+          ]
+        },
+        {
+          "type": "section",
+          "title": "Phase 3 — Fracture Vein waves (2 per match)",
+          "body": "Two <strong>Fracture Vein</strong> rounds spawn during the 30 minutes (~4,000 capacity, ~200 copper/sec vs ~16/sec on normal L2). Watch the mini-map countdown. At the <strong>60-second warning</strong>, recall all marches so you're ready the instant they spawn — first arrivals win contested tiles. Send every free slot. If you missed a wave by 2+ minutes, skip stale veins and return to guard/vein cycling."
+        },
+        {
+          "type": "section",
+          "title": "Phase 4 — Final 7 minutes: Peak of Eternity",
+          "body": "The <strong>Peak of Eternity</strong> (center tower) unlocks with <strong>7 minutes left</strong> — not at match start. Make <strong>one quick capture attempt</strong> when it opens; even a brief touch can land you on the occupation leaderboard for a large end-of-match bonus (often 40k–80k pool split by hold time). Don't overcommit — return to Cesares + vein cycling unless you're strong enough to hold."
+        },
+        {
+          "type": "table",
+          "title": "Four parallel income streams (run all at once)",
+          "headers": ["Stream", "When", "Action"],
+          "rows": [
+            ["Guard hunting", "All match", "Kill Cesares for XP early, then 1,500 copper/kill + wagon loot"],
+            ["Vein proc cycle", "After T3 Left", "Occupy vein → 5k bonus → recall every ~60s"],
+            ["Fracture Veins", "2 spawn waves", "Recall early, send all marches on spawn"],
+            ["Peak snipe", "Final 7 min", "One quick capture attempt, then back to loops"]
+          ]
+        },
+        {
+          "type": "list",
+          "title": "Common mistakes",
+          "items": [
+            "Camping high-tier veins instead of cycling the 5k proc.",
+            "Fighting for the Peak all match — wastes marches early.",
+            "Letting the loot wagon sit idle.",
+            "Burning T5 active on Fracture Veins (wrong target).",
+            "Stopping guard hunts after skills max out.",
+            "Hero on cooldown → entire operation stops (send hero-less marches instead).",
+            "Joining a time slot you can't actively play for 30 minutes."
+          ]
+        }
+      ],
+      "note": "Sources: SQB alliance practice, kingshotwiki.com, kingshotmastery.com, kingshotguide.org. Skill names vary slightly by patch — verify T3 Left = 5k on vein occupy in-game. Rewards scale hard by rank; top 5 ≫ top 10 ≫ mid pack."
     }
   ]
 }
