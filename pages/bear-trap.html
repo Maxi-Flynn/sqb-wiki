@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bear Trap Planner — SQB Wiki</title>
+<link rel="stylesheet" href="../css/theme.css">
+</head>
+<body class="page-wide">
+
+<div class="header"></div>
+
+<div class="bt-page">
+  <div class="intro">Place castles, resource nodes and banners around the trap. Tap a cell to place, drag a piece to move it, and use the Select tool to rename. Everything saves to this device automatically.</div>
+
+  <!-- Toolbar -->
+  <div class="bt-toolbar">
+    <div class="bt-tools" id="bt-tools">
+      <button type="button" class="bt-tool" data-tool="select">✋ Select</button>
+      <button type="button" class="bt-tool" data-tool="castle">🏰 Castle</button>
+      <button type="button" class="bt-tool" data-tool="node">⛏️ Node</button>
+      <button type="button" class="bt-tool" data-tool="banner">🚩 Banner</button>
+      <button type="button" class="bt-tool" data-tool="erase">🧽 Erase</button>
+    </div>
+    <div class="bt-toolbar-row">
+      <button type="button" class="bt-btn" id="bt-zoom-out" aria-label="Zoom out">−</button>
+      <button type="button" class="bt-btn" id="bt-zoom-in" aria-label="Zoom in">+</button>
+      <button type="button" class="bt-btn" id="bt-zoom-fit">Fit</button>
+      <button type="button" class="bt-btn" id="bt-undo">↩ Undo</button>
+      <select id="bt-grid-size" class="bt-select" aria-label="Grid size"></select>
+      <select id="bt-shape" class="bt-select" aria-label="Board shape">
+        <option value="square">Square</option>
+        <option value="round">Round</option>
+      </select>
+      <select id="bt-angle" class="bt-select" aria-label="Board angle">
+        <option value="45">◆ Diamond</option>
+        <option value="0">■ Top-down</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="bt-status" id="bt-status"></div>
+
+  <!-- Board -->
+  <div class="bt-board-wrap" id="bt-board-wrap">
+    <div class="bt-stage" id="bt-stage">
+      <div class="bt-board" id="bt-board">
+        <div class="bt-cells" id="bt-cells"></div>
+        <div class="bt-pieces" id="bt-pieces"></div>
+        <div class="bt-ghost" id="bt-ghost"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bt-stats" id="bt-stats"></div>
+
+  <!-- Roster -->
+  <div class="section-title">Castle Roster <span class="bt-badge" id="bt-queue-count">0</span></div>
+  <div class="bt-panel">
+    <div class="bt-field">
+      <label for="bt-roster-text">Paste a list — one castle per line (<code>Name</code>, <code>Name, TC</code>, or <code>Name, TC, Power</code>)</label>
+      <textarea id="bt-roster-text" rows="4" placeholder="Maxi, 30, 42000000&#10;Flynn, 29, 38000000&#10;Truss"></textarea>
+    </div>
+    <div class="bt-btn-row">
+      <button type="button" class="bt-btn primary" id="bt-roster-add">Add to roster</button>
+      <button type="button" class="bt-btn" id="bt-roster-clear">Clear roster</button>
+    </div>
+
+    <div class="bt-divider">or add one at a time</div>
+    <div class="bt-field-row">
+      <div class="bt-field grow">
+        <label for="bt-single-name">Name</label>
+        <input type="text" id="bt-single-name" placeholder="Player name" maxlength="24">
+      </div>
+      <div class="bt-field narrow">
+        <label for="bt-single-tc">TC</label>
+        <input type="number" id="bt-single-tc" min="1" max="40" placeholder="—">
+      </div>
+      <div class="bt-field narrow">
+        <label for="bt-single-pl">Power</label>
+        <input type="number" id="bt-single-pl" min="0" step="100000" placeholder="—">
+      </div>
+    </div>
+    <div class="bt-btn-row">
+      <button type="button" class="bt-btn primary" id="bt-single-add">Add castle</button>
+    </div>
+
+    <div class="bt-queue" id="bt-queue"></div>
+    <div class="bt-hint">Tap a name to arm it, then tap the board — or drag the name straight onto a spot.</div>
+  </div>
+
+  <!-- Auto layout -->
+  <div class="section-title">Auto Layout</div>
+  <div class="bt-panel">
+    <div class="bt-field">
+      <label for="bt-packing">Packing</label>
+      <select id="bt-packing" class="bt-select wide">
+        <option value="tight">Tight — maximum castles nearest the trap</option>
+        <option value="spaced">Spaced — leave a 1-cell gap between castles</option>
+      </select>
+    </div>
+    <div class="bt-btn-row">
+      <button type="button" class="bt-btn primary" id="bt-auto">Auto-place roster</button>
+      <button type="button" class="bt-btn" id="bt-regen">Re-pack all castles</button>
+    </div>
+    <div class="bt-hint">Sorts strongest-first (Power, then TC) and rings them outward from the trap, skipping nodes and banners. <strong>Re-pack</strong> pulls every placed castle back in and rebuilds the whole ring.</div>
+  </div>
+
+  <!-- Selected piece -->
+  <div class="section-title">Selected Piece</div>
+  <div class="bt-panel" id="bt-inspector"></div>
+
+  <!-- Share -->
+  <div class="section-title">Save & Share</div>
+  <div class="bt-panel">
+    <div class="bt-btn-row">
+      <button type="button" class="bt-btn primary" id="bt-export">Export</button>
+      <button type="button" class="bt-btn" id="bt-copy">Copy</button>
+      <button type="button" class="bt-btn" id="bt-download">Download</button>
+      <button type="button" class="bt-btn" id="bt-load">Load pasted</button>
+    </div>
+    <div class="bt-field">
+      <label for="bt-share">Layout JSON — paste one here and hit <strong>Load pasted</strong> to open a teammate's plan</label>
+      <textarea id="bt-share" rows="5" placeholder="Exported layout JSON appears here"></textarea>
+    </div>
+    <div class="bt-field">
+      <label for="bt-file">…or open a downloaded <code>.json</code> file</label>
+      <input type="file" id="bt-file" accept="application/json,.json">
+    </div>
+    <div class="bt-btn-row">
+      <button type="button" class="bt-btn" id="bt-clear">Clear board</button>
+      <button type="button" class="bt-btn danger" id="bt-reset">Reset everything</button>
+    </div>
+    <div class="bt-hint">Layouts live in this browser only — export and drop the JSON in Discord to share with the alliance.</div>
+  </div>
+
+  <div class="note-box">
+    <strong>Footprints:</strong> Bear Trap 3×3 (locked to center) · Castle 2×2 · Node 2×2 · Banner 1×1. Grid sizes stay odd so the trap sits perfectly centered.
+  </div>
+</div>
+
+<script src="../js/common.js"></script>
+<script src="../js/bear-trap-model.js"></script>
+<script src="../js/bear-trap.js"></script>
+</body>
+</html>

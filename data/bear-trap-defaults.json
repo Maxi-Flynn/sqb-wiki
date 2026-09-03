@@ -1,0 +1,16 @@
+{
+  "_meta": {
+    "description": "Starting board settings for the Bear Trap Planner. Grid sizes must stay odd so the 3x3 trap sits exactly in the center.",
+    "lastUpdated": "2026-09-03",
+    "sourceNote": "Footprints verified against in-game placement: Bear Trap 3x3, Castle 2x2, Resource Node 2x2, Banner 1x1."
+  },
+  "gridSize": 21,
+  "shape": "square",
+  "cellSize": 26,
+  "pieceTypes": {
+    "trap": { "w": 3, "h": 3, "label": "Bear Trap", "icon": "🐻" },
+    "castle": { "w": 2, "h": 2, "label": "Castle", "icon": "🏰" },
+    "node": { "w": 2, "h": 2, "label": "Node", "icon": "⛏️" },
+    "banner": { "w": 1, "h": 1, "label": "Banner", "icon": "🚩" }
+  }
+}

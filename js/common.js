@@ -17,6 +17,7 @@ function renderNav(activeId) {
     { id: "roi", label: "⚔ ROI Engine", href: "roi-engine.html" },
     { id: "kvk", label: "👑 KvK", href: "kvk-matrix.html" },
     { id: "sg", label: "🏆 Str. Gov", href: "sg-matrix.html" },
+    { id: "beartrap", label: "🐻 Bear Trap", href: "bear-trap.html" },
     { id: "guides", label: "📜 Guides", href: "guides.html" },
     { id: "calendar", label: "🗓 Calendar", href: "calendar.html" },
   ];
