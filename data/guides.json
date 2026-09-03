@@ -726,6 +726,123 @@
         }
       ],
       "note": "Sources: SQB alliance practice, kingshotwiki.com, kingshotmastery.com, kingshotguide.org. Skill names vary slightly by patch — verify T3 Left = 5k on vein occupy in-game. Rewards scale hard by rank; top 5 ≫ top 10 ≫ mid pack."
+    },
+    {
+      "id": "terror-rally",
+      "category": "events",
+      "gen": 3,
+      "title": "Terror Rallies — Safe / Maybe / No Cheat Sheet",
+      "icon": "👹",
+      "summary": "What actually wins terror fights — captain stats, troop tier, rally fill, joiner skills",
+      "blocks": [
+        {
+          "type": "callout",
+          "variant": "tip",
+          "text": "<strong>Assumption for this table:</strong> Full rally capacity, Gen 3 formation (10/10/80), and a <strong>realistic mix</strong> of joiners — some Chenko/Amadeus/Yeonwoo in slot 1, plus a few bad heroes (Jabel, Gordon, Howard, Diana) stealing skill slots. Stamina is refunded if the rally fails."
+        },
+        {
+          "type": "section",
+          "title": "What actually determines win / loss",
+          "body": "Terror rallies are <strong>leader-driven</strong>. Joiner account power and joiner gear <strong>do not</strong> apply — only the captain's stat sheet buffs everyone. City level (TC) matters only indirectly (unlocks troops, Command Center, heroes)."
+        },
+        {
+          "type": "table",
+          "title": "Factor priority (most → least important)",
+          "headers": ["Rank", "Factor", "Why it matters"],
+          "rows": [
+            ["1", "Rally Captain combat stats", "Attack, Lethality, Health, Defense from research + Governor Gear + Charms + Chief Gear — multiplies <em>every</em> troop in the rally"],
+            ["2", "Captain hero gen + skills + widgets", "All 9 expedition skills + exclusive gear apply; Mythic widgets are multiplicative"],
+            ["3", "Highest troop tier in the rally", "Sets base stats for the entire army — one T7 joiner drags the whole rally down"],
+            ["4", "Total troops (rally fill %)", "Command Center sets rally cap; empty slots = free damage left on the table"],
+            ["5", "Joiner skill quality (top 4)", "Only Hero 1 skill 1 counts; game picks 4 highest levels — Jabel/Gordon/Howard skills are dead weight"],
+            ["—", "NOT: joiner power / joiner gear", "Joiners bring troop count + maybe one skill; their research and gear are ignored"],
+            ["—", "NOT: deployment cap alone", "Leader march size helps, but <strong>CC rally capacity</strong> + fill rate matters more for terrors"]
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Gen 3 cheat sheet — should you lead this terror?",
+          "headers": ["Terror", "Hard gate", "✅ Safe lead", "⚠️ Maybe", "❌ Def no"],
+          "rows": [
+            ["L1 Rhino", "Server day 3+", "CC 10+, T7+, any offensive lead", "CC 10 partial fill", "—"],
+            ["L2 Bison", "Server day 3+", "CC 10+, T7+, 70%+ fill", "CC 10 low fill or weak lead", "T6 troops as captain"],
+            ["L3 Moose", "Server day 12+", "CC 12–15+, T7/T8, decent Gen 2–3 lead", "CC 10–12 if 90%+ fill + strong captain", "CC &lt; 10, partial rally"],
+            ["L4 Panther", "Server day 20+", "CC 15–18+, T8, Gen 3 mythic lead, 80%+ fill", "CC 12–15 full rally OR CC 18+ with weak joiners", "CC &lt; 12, T7 captain, &lt; 70% fill"],
+            ["L5", "T8 troops + Governor Gear", "CC 18–22+, T8+, Amadeus/Petra/Marlin lead, 90%+ fill, 2+ Chenko-type joiners", "CC 15–18 if top alliance player leads; mixed joiners", "Missing T8 or Gov Gear; CC &lt; 15; bad hero lead"],
+            ["L6", "T9+ (community)", "CC 22–26+, T9+, top roster + whale fill", "CC 20 T8-maxed lead, perfect joiners", "Gen 3 mid without T9; CC &lt; 18"],
+            ["L7 Lion", "~Server day 350+", "CC 30 / TG whale captain", "—", "Typical Gen 3 kingdom — don't lead"]
+          ]
+        },
+        {
+          "type": "callout",
+          "variant": "warn",
+          "text": "<strong>Mixed joiner penalty:</strong> Each wasted skill slot (Jabel lead, Gordon, Howard, Diana, duplicate low combat skills) effectively drops you one row — L5 \"Safe\" becomes \"Maybe\" if 2+ joiner slots are bad. Coordinate in chat: \"Need 4× Chenko/Amadeus slot 1 — troops only after that.\""
+        },
+        {
+          "type": "table",
+          "title": "Rally capacity quick ref (captain CC → total troops)",
+          "headers": ["CC level", "~Rally cap", "~Captain march", "Terror sweet spot"],
+          "rows": [
+            ["10", "35K", "8K", "L1–L2 lead"],
+            ["15", "88K", "22K", "L3 lead, L4 maybe"],
+            ["18", "140K", "34K", "L4 lead"],
+            ["20", "195K", "38K", "L4 safe, L5 maybe"],
+            ["22", "260K", "43K", "L5 lead (with T8 + gear)"],
+            ["25", "400K", "52K", "L5 safe, L6 maybe"],
+            ["30", "840K", "68K", "L6–L7 territory"]
+          ]
+        },
+        {
+          "type": "list",
+          "title": "Captain checklist (before you open)",
+          "items": [
+            "Are you top ~10–15 alliance power for this content? If not, <strong>join</strong> — leading wastes 25 stamina and everyone's time.",
+            "Tap the rally info panel — confirm captain bonuses and joiner skills before timer expires.",
+            "L5+: confirm you have <strong>T8 troops + Governor Gear equipped</strong>.",
+            "Post per-joiner troop cap: <strong>(total capacity − your march) ÷ joiners</strong>.",
+            "Leader heroes: offensive mythics (Gen 3: Amadeus · Petra · Marlin) — not economy/defense heroes.",
+            "Formation: <strong>10 / 10 / 80</strong> (Gen 3). Gen 4+: keep ≥5,000 infantry absolute count."
+          ]
+        },
+        {
+          "type": "list",
+          "title": "Joiner quick rules",
+          "items": [
+            "Joining costs <strong>0 stamina</strong> — default role for most SQB members.",
+            "Hero 1: Chenko, Amadeus, or Yeonwoo — or <strong>troops only</strong> (better than Jabel/Gordon/Howard).",
+            "Send <strong>highest troop tier</strong> you have; L5+ rallies require <strong>T8 in your march</strong>.",
+            "Enable Auto-Join (War → Rally → Auto-Join) for passive Satin farming.",
+            "Regimental Expansion research matters — bigger march = bigger contribution."
+          ]
+        },
+        {
+          "type": "table",
+          "title": "Terror unlock & rewards (why level matters)",
+          "headers": ["Level", "Name", "Unlock", "Satin (participant)"],
+          "rows": [
+            ["1", "Giant Rhino", "Day 3", "—"],
+            ["2", "Mighty Bison", "Day 3", "—"],
+            ["3", "Great Moose", "Day 12", "15"],
+            ["4", "Alpha Black Panther", "Day 20", "20"],
+            ["5", "—", "Mid/late server", "25"],
+            ["6", "—", "Late server", "—"],
+            ["7", "Regal White Lion", "~Day 350+", "—"]
+          ]
+        },
+        {
+          "type": "list",
+          "title": "Common mistakes",
+          "items": [
+            "Leading with Jabel / Gordon / Howard — defensive or economy skills don't scale terror damage.",
+            "Opening L5 without T8 or Governor Gear.",
+            "Letting joiners lock the rally half-full with weak troops.",
+            "Multiple Jabel leads — four bad skills beats two good ones + two bad.",
+            "Using TC level as a proxy — CC + captain stats + troop tier are the real checks.",
+            "Ignoring the rally panel — highest-level skill wins even if it's a gathering skill."
+          ]
+        }
+      ],
+      "note": "Community-synthesized for Gen 3 / K1762 — not official HP thresholds. When in doubt, join an alliance L3–L4 first and watch the battle report. Sources: kingshotwin.com terrors/rallies guides, kingshotwiki.com. SQB: adjust Safe/Maybe rows as kingdom age advances."
     }
   ]
 }
