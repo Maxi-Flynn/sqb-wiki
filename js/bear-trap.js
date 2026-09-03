@@ -842,6 +842,44 @@ function btFitBoard() {
 
 /* ── Init ───────────────────────────────────── */
 
+/**
+ * Apply tunables from data/bear-trap-defaults.json after first paint.
+ * Does not yank an already-restored layout or a board the user has started editing.
+ */
+function btHydrateDefaults(defaults, { hadSaved }) {
+  if (!defaults || typeof defaults !== "object") return;
+
+  btConfigurePieceTypes(defaults.pieceTypes);
+
+  let needsFit = false;
+  const untouched =
+    !hadSaved &&
+    !btState.layout.pieces.length &&
+    !btState.layout.queue.length &&
+    !btState.history.length;
+
+  if (untouched) {
+    const size = Number(defaults.gridSize);
+    const shape = defaults.shape === "round" ? "round" : "square";
+    if (
+      BT_GRID_SIZES.includes(size) &&
+      (size !== btState.layout.gridSize || shape !== btState.layout.shape)
+    ) {
+      btState.layout = btCreateLayout({ gridSize: size, shape });
+      needsFit = true;
+    }
+
+    const cell = Number(defaults.cellSize);
+    if (cell >= BT_CELL_MIN && cell <= BT_CELL_MAX && cell !== btState.cell) {
+      btState.cell = cell;
+      needsFit = true;
+    }
+  }
+
+  btRenderAll();
+  if (needsFit) btFitBoard();
+}
+
 async function btInit() {
   mountHeader({
     eyebrow: "SQB Alliance · Kingdom #1762",
@@ -872,25 +910,16 @@ async function btInit() {
   btEl.packing = document.getElementById("bt-packing");
   btEl.angle = document.getElementById("bt-angle");
 
-  let defaults = {};
-  try {
-    defaults = await loadData("bear-trap-defaults.json");
-  } catch {
-    defaults = {};
-  }
-  btConfigurePieceTypes(defaults.pieceTypes);
-
+  // Paint immediately with in-code defaults; hydrate from JSON when it arrives.
   btEl.gridSize.innerHTML = BT_GRID_SIZES.map(
     (size) => `<option value="${size}">${size} × ${size}</option>`
   ).join("");
 
   const saved = btLoadLocal();
-  btState.layout = saved || btCreateLayout({ gridSize: defaults.gridSize, shape: defaults.shape });
-  btState.cell = Math.min(BT_CELL_MAX, Math.max(BT_CELL_MIN, Number(defaults.cellSize) || 26));
-
   const view = btLoadView();
-  const startAngle = view.rotation ?? defaults.rotation;
-  btState.rotation = BT_ANGLES.includes(Number(startAngle)) ? Number(startAngle) : 45;
+  btState.layout = saved || btCreateLayout();
+  btState.cell = Math.min(BT_CELL_MAX, Math.max(BT_CELL_MIN, Number(view.cell) || 26));
+  btState.rotation = BT_ANGLES.includes(Number(view.rotation)) ? Number(view.rotation) : 45;
   if (view.packing === "spaced" || view.packing === "tight") btState.packing = view.packing;
 
   btWireBoard();
@@ -908,6 +937,13 @@ async function btInit() {
       ? "Restored your last layout from this device."
       : "Fresh board — paste your castle roster, then tap to place."
   );
+
+  try {
+    const defaults = await loadData("bear-trap-defaults.json");
+    btHydrateDefaults(defaults, { hadSaved: Boolean(saved) });
+  } catch {
+    /* built-in footprints / grid already on screen */
+  }
 }
 
 btInit();
