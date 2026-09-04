@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════
    Bear Trap Planner — UI controller
-   Renders the board, wires pointer input, roster queue and share tools.
+   Renders the board, wires pointer input, roster panel and share tools.
    Layout maths live in bear-trap-model.js
    ═══════════════════════════════════════════════ */
 
@@ -22,13 +22,14 @@ const BT_VIEW_KEY = "sqb-bear-trap-view";
 const btState = {
   layout: null,
   tool: "select",
-  activeQueueId: null,
   selectedId: null,
+  hoverId: null,
   cell: 26,
   rotation: 45,
   packing: "tight",
   history: [],
   drag: null,
+  editId: null,
 };
 
 const btEl = {};
@@ -50,6 +51,12 @@ function btLoadView() {
   } catch {
     return {};
   }
+}
+
+/** Map UI packing labels ("loose") onto model values ("spaced"). */
+function btNormalizePacking(value) {
+  if (value === "spaced" || value === "loose") return "spaced";
+  return "tight";
 }
 
 /** How far a rotated square spreads relative to its side: 1 when square, √2 at 45°. */
@@ -87,7 +94,9 @@ function btUndo() {
   try {
     btState.layout = btDeserialize(JSON.parse(previous));
     btState.selectedId = null;
-    btState.activeQueueId = null;
+    btState.hoverId = null;
+    btState.editId = null;
+    btCloseModal(btEl.modalEdit);
     btCommit();
     btStatus("Undone.");
   } catch {
@@ -192,10 +201,14 @@ function btPieceHtml(piece) {
   ].join(";");
 
   const selected = piece.id === btState.selectedId ? " selected" : "";
+  const hover = piece.id === btState.hoverId ? " hover" : "";
   const label = piece.name ? `<span class="bt-piece-label">${btEscape(piece.name)}</span>` : "";
-  const meta = piece.pl != null ? `<span class="bt-piece-meta">${btFormatPower(piece.pl)}</span>`
-    : piece.tc != null ? `<span class="bt-piece-meta">TC${btEscape(piece.tc)}</span>`
-    : "";
+  const meta =
+    piece.pl != null
+      ? `<span class="bt-piece-meta">${btFormatPower(piece.pl)}</span>`
+      : piece.tc != null
+        ? `<span class="bt-piece-meta">TC${btEscape(piece.tc)}</span>`
+        : "";
   const title = btEscape(
     [def.label, piece.name, piece.tc != null ? `TC ${piece.tc}` : "", piece.pl != null ? `PL ${piece.pl.toLocaleString()}` : ""]
       .filter(Boolean)
@@ -203,7 +216,7 @@ function btPieceHtml(piece) {
   );
 
   // .bt-piece-inner counter-rotates so names stay readable on a tilted board.
-  return `<div class="bt-piece ${piece.type}${selected}" style="${style}" data-id="${piece.id}" title="${title}">
+  return `<div class="bt-piece ${piece.type}${selected}${hover}" style="${style}" data-id="${piece.id}" title="${title}">
     <span class="bt-piece-inner"><span class="bt-piece-icon">${def.icon}</span>${label}${meta}</span>
   </div>`;
 }
@@ -231,98 +244,142 @@ function btHideGhost() {
   btEl.ghost.style.display = "none";
 }
 
-/* ── Roster queue ────────────────────────────── */
+/* ── Roster panel ────────────────────────────── */
 
-function btRenderQueue() {
-  const queue = btState.layout.queue;
-  btEl.queueCount.textContent = String(queue.length);
+function btRenderRoster() {
+  const castles = btRosterCastles(btState.layout);
+  if (btEl.rosterCount) btEl.rosterCount.textContent = String(castles.length);
 
-  if (!queue.length) {
-    btEl.queue.innerHTML = `<div class="bt-empty">Roster empty — paste names above, then tap the board to place them.</div>`;
+  if (!castles.length) {
+    btEl.rosterList.innerHTML = `<div class="bt-empty">No castles yet — use the Castle tool or paste a roster below.</div>`;
     return;
   }
 
-  btEl.queue.innerHTML = queue
-    .map((entry) => {
-      const active = entry.id === btState.activeQueueId ? " active" : "";
-      const meta = [entry.pl != null ? `PL ${btFormatPower(entry.pl)}` : "", entry.tc != null ? `TC ${entry.tc}` : ""]
+  btEl.rosterList.innerHTML = castles
+    .map((piece) => {
+      const active = piece.id === btState.selectedId ? " active" : "";
+      const hover = piece.id === btState.hoverId ? " hover" : "";
+      const meta = [piece.pl != null ? `PL ${btFormatPower(piece.pl)}` : "", piece.tc != null ? `TC ${piece.tc}` : ""]
         .filter(Boolean)
         .join(" · ");
-      return `<div class="bt-queue-item${active}" data-queue-id="${entry.id}">
-        <span class="bt-queue-name">${btEscape(entry.name)}</span>
-        ${meta ? `<span class="bt-queue-meta">${btEscape(meta)}</span>` : ""}
-        <button type="button" class="bt-queue-drop" data-remove-queue="${entry.id}" aria-label="Remove ${btEscape(entry.name)}">×</button>
+      return `<div class="bt-roster-row${active}${hover}" data-id="${btEscape(piece.id)}">
+        <span class="bt-roster-name">${btEscape(piece.name || "Unnamed")}</span>
+        ${meta ? `<span class="bt-roster-meta">${btEscape(meta)}</span>` : ""}
       </div>`;
     })
     .join("");
 }
 
-/* ── Inspector ───────────────────────────────── */
+function btSetHover(id) {
+  if (btState.hoverId === id) return;
+  btState.hoverId = id || null;
+  btSyncHoverClasses();
+}
 
-function btRenderInspector() {
-  const piece = btState.selectedId ? btFindPiece(btState.layout, btState.selectedId) : null;
-
-  if (!piece) {
-    btEl.inspector.innerHTML = `<div class="bt-empty">Nothing selected. Use the <strong>Select</strong> tool and tap a castle, node or banner to rename it.</div>`;
-    return;
+function btSyncHoverClasses() {
+  if (btEl.pieces) {
+    btEl.pieces.querySelectorAll(".bt-piece").forEach((el) => {
+      el.classList.toggle("hover", el.dataset.id === btState.hoverId);
+    });
   }
+  if (btEl.rosterList) {
+    btEl.rosterList.querySelectorAll(".bt-roster-row").forEach((el) => {
+      el.classList.toggle("hover", el.dataset.id === btState.hoverId);
+      el.classList.toggle("active", el.dataset.id === btState.selectedId);
+    });
+  }
+}
+
+/* ── Edit modal ──────────────────────────────── */
+
+function btOpenModal(modal) {
+  if (!modal) return;
+  modal.hidden = false;
+}
+
+function btCloseModal(modal) {
+  if (!modal) return;
+  modal.hidden = true;
+}
+
+function btCloseAllModals() {
+  btCloseModal(btEl.modalEdit);
+  btCloseModal(btEl.modalOrganize);
+  btCloseModal(btEl.modalManage);
+  btState.editId = null;
+}
+
+function btOpenEditModal(pieceId) {
+  const piece = btFindPiece(btState.layout, pieceId);
+  if (!piece) return;
 
   if (piece.type === "trap") {
-    btEl.inspector.innerHTML = `<div class="bt-empty">🐻 <strong>Bear Trap</strong> is locked to the center of the board and cannot be moved or deleted.</div>`;
+    btState.selectedId = piece.id;
+    btRenderAll();
+    btStatus("🐻 Bear Trap is locked to the center — it cannot be moved or edited.");
     return;
   }
+
+  btState.selectedId = piece.id;
+  btState.editId = piece.id;
 
   const def = BT_PIECE_TYPES[piece.type];
   const isCastle = piece.type === "castle";
-  btEl.inspector.innerHTML = `
-    <div class="bt-field">
-      <label for="bt-edit-name">${def.icon} ${btEscape(def.label)} name</label>
-      <input id="bt-edit-name" type="text" value="${btEscape(piece.name)}" placeholder="${isCastle ? "Player name" : "e.g. North Node"}" maxlength="24">
-    </div>
-    ${isCastle ? `
-    <div class="bt-field-row">
-      <div class="bt-field">
-        <label for="bt-edit-tc">TC level</label>
-        <input id="bt-edit-tc" type="number" min="1" max="40" value="${piece.tc ?? ""}" placeholder="—">
-      </div>
-      <div class="bt-field">
-        <label for="bt-edit-pl">Power (PL)</label>
-        <input id="bt-edit-pl" type="number" min="0" step="100000" value="${piece.pl ?? ""}" placeholder="—">
-      </div>
-    </div>` : ""}
-    <div class="bt-btn-row">
-      <button type="button" class="bt-btn" id="bt-edit-save">Save</button>
-      <button type="button" class="bt-btn danger" id="bt-edit-delete">Remove</button>
-    </div>`;
+  btEl.editTitle.textContent = `Edit ${def.label.toLowerCase()}`;
+  btEl.editName.value = piece.name || "";
+  btEl.editCastleFields.hidden = !isCastle;
+  if (isCastle) {
+    btEl.editTc.value = piece.tc ?? "";
+    btEl.editPl.value = piece.pl ?? "";
+  }
 
-  btEl.inspector.querySelector("#bt-edit-save").addEventListener("click", btSaveInspector);
-  btEl.inspector.querySelector("#bt-edit-delete").addEventListener("click", () => {
-    btPushHistory();
-    btReturnCastleToQueue(piece);
-    btRemovePiece(btState.layout, piece.id);
-    btState.selectedId = null;
-    btCommit();
-    btStatus("Removed.");
-  });
-  btEl.inspector.querySelector("#bt-edit-name").addEventListener("keydown", (ev) => {
-    if (ev.key === "Enter") btSaveInspector();
-  });
+  btOpenModal(btEl.modalEdit);
+  btRenderRoster();
+  btRenderBoard();
+  btEl.editName.focus();
+  btEl.editName.select();
 }
 
-function btSaveInspector() {
-  const piece = btState.selectedId ? btFindPiece(btState.layout, btState.selectedId) : null;
+function btSaveEditModal() {
+  const piece = btState.editId ? btFindPiece(btState.layout, btState.editId) : null;
   if (!piece || piece.type === "trap") return;
 
-  const nameInput = btEl.inspector.querySelector("#bt-edit-name");
-  const tcInput = btEl.inspector.querySelector("#bt-edit-tc");
-  const plInput = btEl.inspector.querySelector("#bt-edit-pl");
-
   btPushHistory();
-  piece.name = nameInput ? nameInput.value.trim().slice(0, 24) : piece.name;
-  if (tcInput) piece.tc = btCleanNumber(tcInput.value, { min: 1, max: 40 });
-  if (plInput) piece.pl = btCleanNumber(plInput.value, { min: 0 });
+  piece.name = btEl.editName.value.trim().slice(0, 24);
+  if (piece.type === "castle") {
+    piece.tc = btCleanNumber(btEl.editTc.value, { min: 1, max: 40 });
+    piece.pl = btCleanNumber(btEl.editPl.value, { min: 0 });
+  }
+  btState.editId = null;
+  btCloseModal(btEl.modalEdit);
   btCommit();
   btStatus("Saved.");
+}
+
+function btDeleteFromEditModal() {
+  const piece = btState.editId ? btFindPiece(btState.layout, btState.editId) : null;
+  if (!piece || piece.type === "trap") return;
+
+  btPushHistory();
+  btRemovePiece(btState.layout, piece.id);
+  if (btState.selectedId === piece.id) btState.selectedId = null;
+  if (btState.hoverId === piece.id) btState.hoverId = null;
+  btState.editId = null;
+  btCloseModal(btEl.modalEdit);
+  btCommit();
+  btStatus(piece.name ? `Removed ${piece.name}.` : "Removed.");
+}
+
+/* ── Mobile roster drawer ────────────────────── */
+
+function btSetRosterOpen(open) {
+  if (!btEl.rosterPanel) return;
+  btEl.rosterPanel.classList.toggle("open", open);
+  if (btEl.rosterToggle) btEl.rosterToggle.setAttribute("aria-expanded", open ? "true" : "false");
+  if (btEl.rosterBackdrop) {
+    btEl.rosterBackdrop.hidden = !open;
+    btEl.rosterBackdrop.classList.toggle("show", open);
+  }
 }
 
 /* ── Toolbar + stats ────────────────────────── */
@@ -333,55 +390,45 @@ function btRenderToolbar() {
   });
   btEl.gridSize.value = String(btState.layout.gridSize);
   btEl.shape.value = btState.layout.shape;
-  btEl.packing.value = btState.packing;
   btEl.angle.value = String(btState.rotation);
 }
 
 function btRenderStats() {
   const counts = { castle: 0, node: 0, banner: 0 };
-  for (const piece of btState.layout.pieces) counts[piece.type] += 1;
+  for (const piece of btState.layout.pieces) {
+    if (counts[piece.type] != null) counts[piece.type] += 1;
+  }
   btEl.stats.innerHTML = `
     <span>🏰 ${counts.castle} castles</span>
     <span>⛏️ ${counts.node} nodes</span>
-    <span>🚩 ${counts.banner} banners</span>
-    <span>📋 ${btState.layout.queue.length} unplaced</span>`;
+    <span>🚩 ${counts.banner} banners</span>`;
 }
 
 function btRenderAll() {
   btRenderBoard();
-  btRenderQueue();
-  btRenderInspector();
+  btRenderRoster();
   btRenderToolbar();
   btRenderStats();
+  btRenderSavesList();
+  btRenderRosterSavesList();
 }
 
 /* ── Placement actions ──────────────────────── */
 
-function btActiveQueueEntry() {
-  const queue = btState.layout.queue;
-  if (!queue.length) return null;
-  if (btState.activeQueueId) {
-    const found = queue.find((q) => q.id === btState.activeQueueId);
-    if (found) return found;
+function btDefaultPieceName(type) {
+  if (type === "castle") return btNextCastleName(btState.layout);
+  if (type === "node") {
+    const n = btState.layout.pieces.filter((p) => p.type === "node").length + 1;
+    return `Node ${n}`;
   }
-  return queue[0];
+  if (type === "banner") {
+    const n = btState.layout.pieces.filter((p) => p.type === "banner").length + 1;
+    return `Banner ${n}`;
+  }
+  return "";
 }
 
-function btConsumeQueueEntry(id) {
-  const idx = btState.layout.queue.findIndex((q) => q.id === id);
-  if (idx === -1) return null;
-  const [entry] = btState.layout.queue.splice(idx, 1);
-  if (btState.activeQueueId === id) btState.activeQueueId = null;
-  return entry;
-}
-
-/** Deleting a named castle puts the name back on the roster so it is not lost. */
-function btReturnCastleToQueue(piece) {
-  if (piece.type !== "castle" || !piece.name) return;
-  btState.layout.queue.push({ id: btNewId("q"), name: piece.name, tc: piece.tc ?? null, pl: piece.pl ?? null });
-}
-
-function btPlaceAt(type, x, y, queueEntry) {
+function btPlaceAt(type, x, y, extras = {}) {
   const check = btCanPlace(btState.layout, type, x, y);
   if (!check.ok) {
     btStatus(check.reason === "overlap" ? "That spot is already taken." : "That spot is off the board.", "warn");
@@ -389,23 +436,21 @@ function btPlaceAt(type, x, y, queueEntry) {
   }
 
   btPushHistory();
-  const nodeCount = btState.layout.pieces.filter((p) => p.type === "node").length;
   const piece = btAddPiece(btState.layout, {
     type,
     x,
     y,
-    name: queueEntry ? queueEntry.name : type === "node" ? `Node ${nodeCount + 1}` : "",
-    tc: queueEntry ? queueEntry.tc : null,
-    pl: queueEntry ? queueEntry.pl : null,
+    name: extras.name != null ? extras.name : btDefaultPieceName(type),
+    tc: extras.tc ?? null,
+    pl: extras.pl ?? null,
   });
   if (!piece) {
     btState.history.pop();
     return false;
   }
-  if (queueEntry) btConsumeQueueEntry(queueEntry.id);
   btState.selectedId = piece.id;
   btCommit();
-  btStatus(queueEntry ? `Placed ${queueEntry.name}.` : `Placed ${BT_PIECE_TYPES[type].label.toLowerCase()}.`);
+  btStatus(`Placed ${piece.name || BT_PIECE_TYPES[type].label.toLowerCase()}.`);
   return true;
 }
 
@@ -420,17 +465,27 @@ function btHandleTap(x, y) {
       return;
     }
     btPushHistory();
-    btReturnCastleToQueue(hit);
     btRemovePiece(layout, hit.id);
     if (btState.selectedId === hit.id) btState.selectedId = null;
+    if (btState.hoverId === hit.id) btState.hoverId = null;
     btCommit();
     btStatus(hit.name ? `Removed ${hit.name}.` : "Removed.");
     return;
   }
 
   if (btState.tool === "select") {
-    btState.selectedId = hit ? hit.id : null;
-    btRenderAll();
+    if (!hit) {
+      btState.selectedId = null;
+      btRenderAll();
+      return;
+    }
+    if (hit.type === "trap") {
+      btState.selectedId = hit.id;
+      btRenderAll();
+      btStatus("🐻 Bear Trap is locked to the center — it cannot be moved or edited.");
+      return;
+    }
+    btOpenEditModal(hit.id);
     return;
   }
 
@@ -441,8 +496,7 @@ function btHandleTap(x, y) {
     return;
   }
 
-  const queueEntry = btState.tool === "castle" ? btActiveQueueEntry() : null;
-  btPlaceAt(btState.tool, x, y, queueEntry);
+  btPlaceAt(btState.tool, x, y);
 }
 
 /* ── Pointer drag ───────────────────────────── */
@@ -472,6 +526,8 @@ function btCellFromPoint(clientX, clientY) {
 }
 
 function btBeginDrag(ev, payload) {
+  ev.preventDefault();
+  document.body.classList.add("bt-dragging");
   btState.drag = { ...payload, startX: ev.clientX, startY: ev.clientY, moved: false };
   window.addEventListener("pointermove", btOnDragMove);
   window.addEventListener("pointerup", btOnDragEnd);
@@ -504,14 +560,6 @@ function btOnDragEnd(ev) {
   if (!drag) return;
 
   if (!drag.moved) {
-    if (drag.source === "queue") {
-      btState.activeQueueId = drag.queueId;
-      btState.tool = "castle";
-      btRenderAll();
-      const entry = btState.layout.queue.find((q) => q.id === drag.queueId);
-      btStatus(entry ? `${entry.name} ready — tap the board to place.` : "");
-      return;
-    }
     const cell = btCellFromPoint(ev.clientX, ev.clientY);
     btHandleTap(cell.x, cell.y);
     return;
@@ -520,24 +568,23 @@ function btOnDragEnd(ev) {
   const target = drag.target;
   if (!target || !drag.type) return;
 
-  if (drag.source === "queue") {
-    const entry = btState.layout.queue.find((q) => q.id === drag.queueId);
-    if (entry) btPlaceAt("castle", target.x, target.y, entry);
-    return;
-  }
-
   // Dragged out from an empty cell — place the active tool where it was dropped.
   if (drag.source === "cell") {
-    const queueEntry = drag.type === "castle" ? btActiveQueueEntry() : null;
-    btPlaceAt(drag.type, target.x, target.y, queueEntry);
+    btPlaceAt(drag.type, target.x, target.y);
     return;
   }
 
-  if (!btMovePiece(btState.layout, drag.pieceId, target.x, target.y)) {
+  if (!btCanPlace(btState.layout, drag.type, target.x, target.y, drag.pieceId).ok) {
     btStatus("Can't drop there — off the board or overlapping.", "warn");
     return;
   }
+
   btPushHistory();
+  if (!btMovePiece(btState.layout, drag.pieceId, target.x, target.y)) {
+    btState.history.pop();
+    btStatus("Can't drop there — off the board or overlapping.", "warn");
+    return;
+  }
   btState.selectedId = drag.pieceId;
   btCommit();
   btStatus("Moved.");
@@ -549,6 +596,7 @@ function btOnDragCancel() {
 
 function btCleanupDrag() {
   btState.drag = null;
+  document.body.classList.remove("bt-dragging");
   btHideGhost();
   btPaintTerritory();
   window.removeEventListener("pointermove", btOnDragMove);
@@ -556,51 +604,52 @@ function btCleanupDrag() {
   window.removeEventListener("pointercancel", btOnDragCancel);
 }
 
-/* ── Auto-layout (TC / PL) ──────────────────── */
+/* ── Auto-organize ──────────────────────────── */
 
-function btAutoPlaceRoster() {
-  if (!btState.layout.queue.length) {
-    btStatus("Roster is empty — add castle names first.");
+function btRunOrganize() {
+  const castles = btRosterCastles(btState.layout);
+  if (!castles.length) {
+    btStatus("Nothing to organize — place castles first.");
     return;
   }
+
+  const packing = btNormalizePacking(btEl.orgPacking?.value || btState.packing);
+  const sortBy = btEl.orgSort?.value === "tc" ? "tc" : "pl";
+
   btPushHistory();
-  const castles = [...btState.layout.queue];
-  const { placed, unplaced } = btAutoLayout(btState.layout, castles, { packing: btState.packing });
-  const unplacedIds = new Set(unplaced.map((c) => c.id));
-  btState.layout.queue = btState.layout.queue.filter((q) => unplacedIds.has(q.id));
-  btState.activeQueueId = null;
+  btState.packing = packing;
+  btSaveView();
+  const { placed, unplaced } = btReorganizeCastles(btState.layout, { packing, sortBy });
+  btState.selectedId = null;
+  btState.hoverId = null;
+  btCloseModal(btEl.modalOrganize);
   btCommit();
   btStatus(
     unplaced.length
-      ? `Placed ${placed.length}; ${unplaced.length} did not fit — enlarge the grid or clear space.`
-      : `Placed ${placed.length} castles strongest-first around the trap.`,
+      ? `Organized ${placed.length} castles; ${unplaced.length} did not fit — enlarge the grid or clear space.`
+      : `Organized ${placed.length} castles — ${sortBy.toUpperCase()} strongest nearest the trap.`,
     unplaced.length ? "warn" : ""
   );
 }
 
-function btRegenerateLayout() {
-  const placedCastles = btState.layout.pieces.filter((p) => p.type === "castle");
-  if (!placedCastles.length && !btState.layout.queue.length) {
-    btStatus("Nothing to arrange yet — add castle names first.");
+/* ── Bulk roster paste ──────────────────────── */
+
+function btBulkAddRoster() {
+  const entries = btParseRoster(btEl.rosterText.value);
+  if (!entries.length) {
+    btStatus('Add one name per line, e.g. "Maxi, 30, 42000000".', "warn");
     return;
   }
 
   btPushHistory();
-  const pool = [
-    ...placedCastles.map((p) => ({ id: btNewId("q"), name: p.name, tc: p.tc, pl: p.pl })),
-    ...btState.layout.queue.map((q) => ({ ...q })),
-  ];
-  btState.layout.pieces = btState.layout.pieces.filter((p) => p.type !== "castle");
-
-  const { placed, unplaced } = btAutoLayout(btState.layout, pool, { packing: btState.packing });
-  btState.layout.queue = unplaced.map((c) => ({ id: btNewId("q"), name: c.name, tc: c.tc, pl: c.pl }));
-  btState.selectedId = null;
-  btState.activeQueueId = null;
+  const packing = btNormalizePacking(btState.packing);
+  const { placed, unplaced } = btPlaceRosterEntries(btState.layout, entries, { packing });
+  btEl.rosterText.value = "";
   btCommit();
   btStatus(
     unplaced.length
-      ? `Re-packed ${placed.length} castles; ${unplaced.length} left on the roster.`
-      : `Re-packed ${placed.length} castles — highest power nearest the trap.`,
+      ? `Placed ${placed.length}; ${unplaced.length} did not fit — enlarge the grid or clear space.`
+      : `Placed ${placed.length} castle${placed.length === 1 ? "" : "s"} on the map.`,
     unplaced.length ? "warn" : ""
   );
 }
@@ -644,9 +693,12 @@ function btImport(text) {
     btPushHistory();
     btState.layout = layout;
     btState.selectedId = null;
-    btState.activeQueueId = null;
+    btState.hoverId = null;
+    btState.editId = null;
+    btCloseAllModals();
     btCommit();
-    btStatus(`Loaded layout — ${layout.pieces.length} pieces, ${layout.queue.length} on roster.`);
+    const castles = btRosterCastles(layout).length;
+    btStatus(`Loaded layout — ${layout.pieces.length} pieces, ${castles} castles.`);
   } catch (err) {
     btStatus(`Could not read that layout: ${err.message}`, "warn");
   }
@@ -660,7 +712,7 @@ function btImportFile(file) {
   reader.readAsText(file);
 }
 
-/* ── Named browser saves ─────────────────────── */
+/* ── Named layout saves ─────────────────────── */
 
 function btFormatSaveStamp(iso) {
   try {
@@ -714,7 +766,9 @@ function btLoadNamed() {
     btPushHistory();
     btState.layout = layout;
     btState.selectedId = null;
-    btState.activeQueueId = null;
+    btState.hoverId = null;
+    btState.editId = null;
+    btCloseAllModals();
     btCommit();
     btEl.saveName.value = entry.name;
     btStatus(`Loaded “${entry.name}”.`);
@@ -755,6 +809,131 @@ function btDeleteNamed() {
   btStatus(`Deleted “${entry.name}”.`);
 }
 
+/* ── Named roster saves ─────────────────────── */
+
+function btRenderRosterSavesList(selectedId) {
+  if (!btEl.rosterSaves) return;
+  const saves = btListRosterSaves();
+  if (!saves.length) {
+    btEl.rosterSaves.innerHTML = `<option value="">No saved rosters yet</option>`;
+    return;
+  }
+  const pick = selectedId || btEl.rosterSaves.value;
+  btEl.rosterSaves.innerHTML = saves
+    .map((s) => {
+      const stamp = btFormatSaveStamp(s.savedAt);
+      const count = Array.isArray(s.roster?.castles) ? s.roster.castles.length : 0;
+      const label = stamp
+        ? `${btEscape(s.name)} (${count}) — ${btEscape(stamp)}`
+        : `${btEscape(s.name)} (${count})`;
+      return `<option value="${btEscape(s.id)}">${label}</option>`;
+    })
+    .join("");
+  if (pick && [...btEl.rosterSaves.options].some((o) => o.value === pick)) btEl.rosterSaves.value = pick;
+}
+
+function btSaveRosterNamed() {
+  const name = (btEl.rosterSaveName?.value || "").trim();
+  try {
+    const entry = btUpsertRosterSave(name, btState.layout);
+    btEl.rosterSaveName.value = entry.name;
+    btRenderRosterSavesList(entry.id);
+    btStatus(`Saved roster “${entry.name}” on this device.`);
+  } catch (err) {
+    btStatus(err.message || "Could not save roster.", "warn");
+  }
+}
+
+/** Load roster entries onto free spots — adds missing castles, does not wipe the board. */
+function btApplyRosterEntries(entries, label) {
+  if (!entries.length) {
+    btStatus("That roster is empty.", "warn");
+    return;
+  }
+
+  const existing = new Set(
+    btRosterCastles(btState.layout).map((c) => String(c.name || "").trim().toLowerCase())
+  );
+  const missing = entries.filter((e) => !existing.has(String(e.name || "").trim().toLowerCase()));
+  if (!missing.length) {
+    btStatus(label ? `“${label}” — every name is already on the board.` : "Every name is already on the board.");
+    return;
+  }
+
+  if (missing.length >= 8) {
+    const ok = window.confirm(
+      `Add ${missing.length} new castle${missing.length === 1 ? "" : "s"} onto free map spots? Existing pieces stay put.`
+    );
+    if (!ok) return;
+  }
+
+  btPushHistory();
+  const packing = btNormalizePacking(btState.packing);
+  const { placed, unplaced } = btPlaceRosterEntries(btState.layout, missing, { packing });
+  btCommit();
+  btStatus(
+    unplaced.length
+      ? `Added ${placed.length}; ${unplaced.length} did not fit — enlarge the grid or clear space.`
+      : `Added ${placed.length} castle${placed.length === 1 ? "" : "s"} from ${label ? `“${label}”` : "roster"}.`,
+    unplaced.length ? "warn" : ""
+  );
+}
+
+function btLoadRosterNamed() {
+  const id = btEl.rosterSaves?.value;
+  const entry = id ? btGetRosterSave(id) : null;
+  if (!entry) {
+    btStatus("Pick a saved roster first.", "warn");
+    return;
+  }
+  try {
+    const entries = btParseRosterFile(entry.roster);
+    btApplyRosterEntries(entries, entry.name);
+  } catch (err) {
+    btStatus(`Could not load that roster: ${err.message}`, "warn");
+  }
+}
+
+function btDeleteRosterNamed() {
+  const id = btEl.rosterSaves?.value;
+  const entry = id ? btGetRosterSave(id) : null;
+  if (!entry) {
+    btStatus("Pick a saved roster to delete.", "warn");
+    return;
+  }
+  if (!window.confirm(`Delete saved roster “${entry.name}”?`)) return;
+  btDeleteRosterSave(id);
+  btRenderRosterSavesList();
+  btStatus(`Deleted roster “${entry.name}”.`);
+}
+
+function btDownloadRoster() {
+  const json = JSON.stringify(btSerializeRoster(btState.layout), null, 2);
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `sqb-bear-trap-roster-${new Date().toISOString().slice(0, 10)}.json`;
+  link.click();
+  URL.revokeObjectURL(url);
+  btStatus("Downloaded roster JSON.");
+}
+
+function btImportRosterFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const entries = btParseRosterFile(JSON.parse(String(reader.result)));
+      btApplyRosterEntries(entries, file.name);
+    } catch (err) {
+      btStatus(`Could not read that roster: ${err.message}`, "warn");
+    }
+  };
+  reader.onerror = () => btStatus("Could not read that file.", "warn");
+  reader.readAsText(file);
+}
+
 /* ── Wiring ─────────────────────────────────── */
 
 function btWireBoard() {
@@ -778,6 +957,20 @@ function btWireBoard() {
       grabDx: cell.x - piece.x,
       grabDy: cell.y - piece.y,
     });
+  });
+
+  btEl.pieces.addEventListener("pointerover", (ev) => {
+    const el = ev.target.closest(".bt-piece");
+    if (!el || el.dataset.id === "trap") return;
+    btSetHover(el.dataset.id);
+  });
+
+  btEl.pieces.addEventListener("pointerout", (ev) => {
+    const el = ev.target.closest(".bt-piece");
+    if (!el) return;
+    const related = ev.relatedTarget && ev.relatedTarget.closest?.(".bt-piece");
+    if (related && related.dataset.id === el.dataset.id) return;
+    if (btState.hoverId === el.dataset.id) btSetHover(null);
   });
 
   btEl.cells.addEventListener("pointerdown", (ev) => {
@@ -806,70 +999,87 @@ function btWireBoard() {
   });
 }
 
-function btWireQueue() {
-  btEl.queue.addEventListener("pointerdown", (ev) => {
-    if (ev.target.closest("[data-remove-queue]")) return;
-    const item = ev.target.closest(".bt-queue-item");
-    if (!item) return;
-    btBeginDrag(ev, { source: "queue", queueId: item.dataset.queueId, type: "castle", grabDx: 0, grabDy: 0 });
+function btWireRoster() {
+  btEl.rosterList.addEventListener("pointerover", (ev) => {
+    const row = ev.target.closest(".bt-roster-row");
+    if (!row) return;
+    btSetHover(row.dataset.id);
   });
 
-  btEl.queue.addEventListener("click", (ev) => {
-    const removeBtn = ev.target.closest("[data-remove-queue]");
-    if (!removeBtn) return;
-    btPushHistory();
-    btConsumeQueueEntry(removeBtn.dataset.removeQueue);
-    btCommit();
-    btStatus("Removed from roster.");
+  btEl.rosterList.addEventListener("pointerleave", () => {
+    btSetHover(null);
   });
+
+  btEl.rosterList.addEventListener("click", (ev) => {
+    const row = ev.target.closest(".bt-roster-row");
+    if (!row) return;
+    btOpenEditModal(row.dataset.id);
+  });
+
+  document.getElementById("bt-roster-add").addEventListener("click", btBulkAddRoster);
+
+  btEl.rosterToggle?.addEventListener("click", () => {
+    const open = !btEl.rosterPanel.classList.contains("open");
+    btSetRosterOpen(open);
+  });
+  btEl.rosterClose?.addEventListener("click", () => btSetRosterOpen(false));
+  btEl.rosterBackdrop?.addEventListener("click", () => btSetRosterOpen(false));
 }
 
-function btWireRoster() {
-  document.getElementById("bt-roster-add").addEventListener("click", () => {
-    const entries = btParseRoster(btEl.rosterText.value);
-    if (!entries.length) {
-      btStatus("Add one name per line, e.g. \"Maxi, 30, 42000000\".", "warn");
-      return;
-    }
-    btPushHistory();
-    btState.layout.queue.push(...entries);
-    btEl.rosterText.value = "";
-    btCommit();
-    btStatus(`Added ${entries.length} to the roster.`);
-  });
-
-  document.getElementById("bt-single-add").addEventListener("click", () => {
-    const name = btEl.singleName.value.trim();
-    if (!name) {
-      btStatus("Enter a castle name.", "warn");
-      return;
-    }
-    btPushHistory();
-    btState.layout.queue.push({
-      id: btNewId("q"),
-      name: name.slice(0, 24),
-      tc: btCleanNumber(btEl.singleTc.value, { min: 1, max: 40 }),
-      pl: btCleanNumber(btEl.singlePl.value, { min: 0 }),
+function btWireModals() {
+  document.querySelectorAll("[data-close-modal]").forEach((el) => {
+    el.addEventListener("click", () => {
+      const modal = el.closest(".bt-modal");
+      btCloseModal(modal);
+      if (modal === btEl.modalEdit) btState.editId = null;
     });
-    btEl.singleName.value = "";
-    btEl.singleTc.value = "";
-    btEl.singlePl.value = "";
-    btCommit();
-    btStatus(`Added ${name}.`);
-    btEl.singleName.focus();
   });
 
-  btEl.singleName.addEventListener("keydown", (ev) => {
-    if (ev.key === "Enter") document.getElementById("bt-single-add").click();
+  document.getElementById("bt-edit-save").addEventListener("click", btSaveEditModal);
+  document.getElementById("bt-edit-delete").addEventListener("click", btDeleteFromEditModal);
+  btEl.editName.addEventListener("keydown", (ev) => {
+    if (ev.key === "Enter") btSaveEditModal();
   });
 
-  document.getElementById("bt-roster-clear").addEventListener("click", () => {
-    if (!btState.layout.queue.length) return;
+  document.getElementById("bt-open-organize").addEventListener("click", () => {
+    if (btEl.orgPacking) btEl.orgPacking.value = btNormalizePacking(btState.packing);
+    btOpenModal(btEl.modalOrganize);
+  });
+  document.getElementById("bt-org-run").addEventListener("click", btRunOrganize);
+
+  document.getElementById("bt-open-manage").addEventListener("click", () => {
+    btRenderRosterSavesList();
+    btOpenModal(btEl.modalManage);
+  });
+
+  btEl.modalManage.addEventListener("click", (ev) => {
+    const btn = ev.target.closest("[data-roster-sort]");
+    if (!btn) return;
+    const key = btn.dataset.rosterSort || "pl";
+    const dir = btn.dataset.rosterDir || "desc";
     btPushHistory();
-    btState.layout.queue = [];
-    btState.activeQueueId = null;
+    btSortRoster(btState.layout, key, dir);
     btCommit();
-    btStatus("Roster cleared.");
+    btStatus(`Roster sorted by ${key.toUpperCase()} (${dir}).`);
+  });
+
+  document.getElementById("bt-roster-save-named").addEventListener("click", btSaveRosterNamed);
+  document.getElementById("bt-roster-load-named").addEventListener("click", btLoadRosterNamed);
+  document.getElementById("bt-roster-delete-named").addEventListener("click", btDeleteRosterNamed);
+  document.getElementById("bt-roster-export").addEventListener("click", btDownloadRoster);
+  document.getElementById("bt-roster-file").addEventListener("change", (ev) => {
+    btImportRosterFile(ev.target.files && ev.target.files[0]);
+    ev.target.value = "";
+  });
+  btEl.rosterSaveName?.addEventListener("keydown", (ev) => {
+    if (ev.key === "Enter") btSaveRosterNamed();
+  });
+
+  document.addEventListener("keydown", (ev) => {
+    if (ev.key !== "Escape") return;
+    if (!btEl.modalEdit.hidden || !btEl.modalOrganize.hidden || !btEl.modalManage.hidden) {
+      btCloseAllModals();
+    }
   });
 }
 
@@ -878,16 +1088,15 @@ function btWireToolbar() {
     const btn = ev.target.closest("[data-tool]");
     if (!btn) return;
     btState.tool = btn.dataset.tool;
-    if (btState.tool !== "castle") btState.activeQueueId = null;
     btHideGhost();
     btRenderAll();
     btStatus(
       btState.tool === "castle"
-        ? "Castle tool — tap the board to place the next roster name."
+        ? "Castle tool — tap an empty cell to place a castle (added to the roster)."
         : btState.tool === "erase"
           ? "Erase tool — tap a piece to remove it."
           : btState.tool === "select"
-            ? "Select tool — tap a piece to rename it, drag to move."
+            ? "Select tool — tap a piece to edit it, drag to move."
             : `${BT_PIECE_TYPES[btState.tool].label} tool — tap the board to place.`
     );
   });
@@ -912,45 +1121,54 @@ function btWireToolbar() {
     btPushHistory();
     const dropped = btResizeGrid(btState.layout, size);
     btState.selectedId = null;
+    btState.hoverId = null;
     btCommit();
     btFitBoard();
-    btStatus(dropped.length ? `Grid set to ${size}×${size} — ${dropped.length} piece(s) no longer fit and were removed.` : `Grid set to ${size}×${size}.`, dropped.length ? "warn" : "");
+    btStatus(
+      dropped.length
+        ? `Grid set to ${size}×${size} — ${dropped.length} piece(s) no longer fit and were removed.`
+        : `Grid set to ${size}×${size}.`,
+      dropped.length ? "warn" : ""
+    );
   });
 
   btEl.shape.addEventListener("change", () => {
     btPushHistory();
     const dropped = btSetShape(btState.layout, btEl.shape.value);
     btState.selectedId = null;
+    btState.hoverId = null;
     btCommit();
-    btStatus(dropped.length ? `Shape changed — ${dropped.length} piece(s) fell outside and were removed.` : "Shape changed.", dropped.length ? "warn" : "");
-  });
-
-  btEl.packing.addEventListener("change", () => {
-    btState.packing = btEl.packing.value;
-    btSaveView();
-    btStatus(btState.packing === "spaced" ? "Auto-layout will leave a one-cell gap between castles." : "Auto-layout will pack castles tightly.");
+    btStatus(
+      dropped.length
+        ? `Shape changed — ${dropped.length} piece(s) fell outside and were removed.`
+        : "Shape changed.",
+      dropped.length ? "warn" : ""
+    );
   });
 }
 
 function btWireActions() {
-  document.getElementById("bt-auto").addEventListener("click", btAutoPlaceRoster);
-  document.getElementById("bt-regen").addEventListener("click", btRegenerateLayout);
-
   document.getElementById("bt-clear").addEventListener("click", () => {
     if (!btState.layout.pieces.length) return;
     btPushHistory();
-    for (const piece of btState.layout.pieces) btReturnCastleToQueue(piece);
     btState.layout.pieces = [];
+    btState.layout.rosterOrder = [];
+    btState.layout.queue = [];
     btState.selectedId = null;
+    btState.hoverId = null;
+    btState.editId = null;
+    btCloseModal(btEl.modalEdit);
     btCommit();
-    btStatus("Board cleared — castle names returned to the roster. Trap stays put.");
+    btStatus("Board cleared — castles removed from the roster too. Trap stays put.");
   });
 
   document.getElementById("bt-reset").addEventListener("click", () => {
     btPushHistory();
     btState.layout = btCreateLayout({ gridSize: btState.layout.gridSize, shape: btState.layout.shape });
     btState.selectedId = null;
-    btState.activeQueueId = null;
+    btState.hoverId = null;
+    btState.editId = null;
+    btCloseAllModals();
     btCommit();
     btStatus("Reset to an empty board.");
   });
@@ -978,6 +1196,7 @@ function btWireActions() {
 function btSetCell(size) {
   btState.cell = Math.min(BT_CELL_MAX, Math.max(BT_CELL_MIN, size));
   btHideGhost();
+  btSaveView();
   btRenderBoard();
 }
 
@@ -1001,10 +1220,7 @@ function btHydrateDefaults(defaults, { hadSaved }) {
 
   let needsFit = false;
   const untouched =
-    !hadSaved &&
-    !btState.layout.pieces.length &&
-    !btState.layout.queue.length &&
-    !btState.history.length;
+    !hadSaved && !btState.layout.pieces.length && !btState.history.length;
 
   if (untouched) {
     const size = Number(defaults.gridSize);
@@ -1043,22 +1259,34 @@ async function btInit() {
   btEl.pieces = document.getElementById("bt-pieces");
   btEl.ghost = document.getElementById("bt-ghost");
   btEl.tools = document.getElementById("bt-tools");
-  btEl.queue = document.getElementById("bt-queue");
-  btEl.queueCount = document.getElementById("bt-queue-count");
-  btEl.inspector = document.getElementById("bt-inspector");
+  btEl.rosterPanel = document.getElementById("bt-roster-panel");
+  btEl.rosterList = document.getElementById("bt-roster-list");
+  btEl.rosterCount = document.getElementById("bt-roster-count");
+  btEl.rosterToggle = document.getElementById("bt-roster-toggle");
+  btEl.rosterClose = document.getElementById("bt-roster-close");
+  btEl.rosterBackdrop = document.getElementById("bt-roster-backdrop");
+  btEl.rosterText = document.getElementById("bt-roster-text");
   btEl.stats = document.getElementById("bt-stats");
   btEl.status = document.getElementById("bt-status");
   btEl.share = document.getElementById("bt-share");
   btEl.saveName = document.getElementById("bt-save-name");
   btEl.saves = document.getElementById("bt-saves");
-  btEl.rosterText = document.getElementById("bt-roster-text");
-  btEl.singleName = document.getElementById("bt-single-name");
-  btEl.singleTc = document.getElementById("bt-single-tc");
-  btEl.singlePl = document.getElementById("bt-single-pl");
   btEl.gridSize = document.getElementById("bt-grid-size");
   btEl.shape = document.getElementById("bt-shape");
-  btEl.packing = document.getElementById("bt-packing");
   btEl.angle = document.getElementById("bt-angle");
+
+  btEl.modalEdit = document.getElementById("bt-modal-edit");
+  btEl.modalOrganize = document.getElementById("bt-modal-organize");
+  btEl.modalManage = document.getElementById("bt-modal-manage");
+  btEl.editTitle = document.getElementById("bt-edit-title");
+  btEl.editName = document.getElementById("bt-edit-name");
+  btEl.editTc = document.getElementById("bt-edit-tc");
+  btEl.editPl = document.getElementById("bt-edit-pl");
+  btEl.editCastleFields = document.getElementById("bt-edit-castle-fields");
+  btEl.orgPacking = document.getElementById("bt-org-packing");
+  btEl.orgSort = document.getElementById("bt-org-sort");
+  btEl.rosterSaveName = document.getElementById("bt-roster-save-name");
+  btEl.rosterSaves = document.getElementById("bt-roster-saves");
 
   // Paint immediately with in-code defaults; hydrate from JSON when it arrives.
   btEl.gridSize.innerHTML = BT_GRID_SIZES.map(
@@ -1070,15 +1298,14 @@ async function btInit() {
   btState.layout = saved || btCreateLayout();
   btState.cell = Math.min(BT_CELL_MAX, Math.max(BT_CELL_MIN, Number(view.cell) || 26));
   btState.rotation = BT_ANGLES.includes(Number(view.rotation)) ? Number(view.rotation) : 45;
-  if (view.packing === "spaced" || view.packing === "tight") btState.packing = view.packing;
+  btState.packing = btNormalizePacking(view.packing);
 
   btWireBoard();
-  btWireQueue();
   btWireRoster();
+  btWireModals();
   btWireToolbar();
   btWireActions();
 
-  btRenderSavesList();
   btRenderAll();
   btFitBoard();
   window.addEventListener("resize", btFitBoard);
@@ -1086,7 +1313,7 @@ async function btInit() {
   btStatus(
     saved
       ? "Restored your last layout from this device."
-      : "Fresh board — paste your castle roster, then tap to place."
+      : "Fresh board — tap Castle to place, or paste a roster to fill the map."
   );
 
   try {
