@@ -18,6 +18,16 @@ const BT_PIECE_TYPES = {
 const BT_GRID_SIZES = [15, 19, 21, 25, 29];
 const BT_GRID_DEFAULT = 21;
 
+/**
+ * Banner territory footprint in cells (odd). A 1×1 banner at (x,y) paints a
+ * square of this side length centered on that cell — matches the common
+ * Kingshot / Whiteout-style 7×7 banner perimeter.
+ */
+let BT_BANNER_COVERAGE = 7;
+
+const BT_SAVES_KEY = "sqb-bear-trap-saves";
+const BT_SAVES_MAX = 24;
+
 let btIdSeq = 0;
 
 function btNewId(prefix) {
@@ -37,6 +47,57 @@ function btConfigurePieceTypes(overrides) {
     if (def.label) BT_PIECE_TYPES[type].label = def.label;
     if (def.icon) BT_PIECE_TYPES[type].icon = def.icon;
   }
+}
+
+/** Odd coverage sizes only so a 1×1 banner stays centered in its territory square. */
+function btConfigureBannerCoverage(size) {
+  const n = Number(size);
+  if (Number.isFinite(n) && n >= 1 && n % 2 === 1) BT_BANNER_COVERAGE = n;
+}
+
+/** Every cell painted by a banner whose top-left is at (x, y). */
+function btBannerCoverageCells(x, y) {
+  const half = Math.floor(BT_BANNER_COVERAGE / 2);
+  const cells = [];
+  for (let cy = y - half; cy <= y + half; cy += 1) {
+    for (let cx = x - half; cx <= x + half; cx += 1) {
+      cells.push({ x: cx, y: cy });
+    }
+  }
+  return cells;
+}
+
+/**
+ * Alliance territory from placed banners.
+ * `excludeId` skips a banner being dragged; `preview` paints its live ghost spot
+ * into the active (bold) set instead.
+ * Returns { idle: Set<"x,y">, active: Set<"x,y"> }.
+ */
+function btTerritoryMaps(layout, { excludeId = null, preview = null, activeId = null } = {}) {
+  const idle = new Set();
+  const active = new Set();
+
+  for (const piece of layout.pieces) {
+    if (piece.type !== "banner") continue;
+    if (excludeId && piece.id === excludeId) continue;
+    const target = activeId && piece.id === activeId ? active : idle;
+    for (const cell of btBannerCoverageCells(piece.x, piece.y)) {
+      if (!btCellPlayable(layout, cell.x, cell.y)) continue;
+      target.add(`${cell.x},${cell.y}`);
+    }
+  }
+
+  if (preview && Number.isFinite(preview.x) && Number.isFinite(preview.y)) {
+    for (const cell of btBannerCoverageCells(preview.x, preview.y)) {
+      if (!btCellPlayable(layout, cell.x, cell.y)) continue;
+      active.add(`${cell.x},${cell.y}`);
+    }
+  }
+
+  // Active wins over idle where they overlap.
+  for (const key of active) idle.delete(key);
+
+  return { idle, active };
 }
 
 function btFootprint(type) {
@@ -395,6 +456,47 @@ function btLoadLocal() {
   } catch {
     return null;
   }
+}
+
+/** Named layout library — separate from the autosave scratch pad. */
+function btListNamedSaves() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(BT_SAVES_KEY));
+    return Array.isArray(raw) ? raw : [];
+  } catch {
+    return [];
+  }
+}
+
+function btWriteNamedSaves(saves) {
+  localStorage.setItem(BT_SAVES_KEY, JSON.stringify(saves.slice(0, BT_SAVES_MAX)));
+}
+
+function btUpsertNamedSave(name, layout) {
+  const trimmed = String(name || "").trim().slice(0, 48);
+  if (!trimmed) throw new Error("Give this save a name");
+  const saves = btListNamedSaves();
+  const existing = saves.findIndex((s) => s.name.toLowerCase() === trimmed.toLowerCase());
+  const entry = {
+    id: existing >= 0 ? saves[existing].id : btNewId("save"),
+    name: trimmed,
+    savedAt: new Date().toISOString(),
+    layout: btSerialize(layout),
+  };
+  if (existing >= 0) saves.splice(existing, 1);
+  saves.unshift(entry);
+  btWriteNamedSaves(saves);
+  return entry;
+}
+
+function btGetNamedSave(id) {
+  return btListNamedSaves().find((s) => s.id === id) || null;
+}
+
+function btDeleteNamedSave(id) {
+  const next = btListNamedSaves().filter((s) => s.id !== id);
+  btWriteNamedSaves(next);
+  return next;
 }
 
 /** Parse a pasted roster. One castle per line: "Name", "Name, TC", "Name, TC, PL". */

@@ -123,6 +123,7 @@ function btRenderBoard() {
   btEl.stage.style.height = `${extent}px`;
 
   const trap = btTrapCenter(layout);
+  const territory = btCurrentTerritoryMaps();
   let cellsHtml = "";
   for (let y = 0; y < size; y += 1) {
     for (let x = 0; x < size; x += 1) {
@@ -130,13 +131,54 @@ function btRenderBoard() {
         cellsHtml += `<div class="bt-cell off"></div>`;
         continue;
       }
+      const key = `${x},${y}`;
       const ring = Math.max(Math.abs(x + 0.5 - trap.x), Math.abs(y + 0.5 - trap.y)) <= 4 ? " inner" : "";
-      cellsHtml += `<div class="bt-cell${ring}"></div>`;
+      const terr = territory.active.has(key)
+        ? " territory-active"
+        : territory.idle.has(key)
+          ? " territory"
+          : "";
+      cellsHtml += `<div class="bt-cell${ring}${terr}"></div>`;
     }
   }
   btEl.cells.innerHTML = cellsHtml;
 
   btEl.pieces.innerHTML = btAllPieces(layout).map(btPieceHtml).join("");
+}
+
+/** Territory shading for the current selection / in-progress banner drag. */
+function btCurrentTerritoryMaps() {
+  const drag = btState.drag;
+  let excludeId = null;
+  let preview = null;
+
+  if (drag && drag.moved && drag.type === "banner" && drag.target) {
+    excludeId = drag.pieceId || null;
+    preview = drag.target;
+  }
+
+  const selected = btState.selectedId ? btFindPiece(btState.layout, btState.selectedId) : null;
+  const activeId = !preview && selected && selected.type === "banner" ? selected.id : null;
+
+  return btTerritoryMaps(btState.layout, { excludeId, preview, activeId });
+}
+
+/** Update cell territory classes without rebuilding pieces (used while dragging). */
+function btPaintTerritory() {
+  if (!btEl.cells || !btState.layout) return;
+  const size = btState.layout.gridSize;
+  const territory = btCurrentTerritoryMaps();
+  const cells = btEl.cells.children;
+  let i = 0;
+  for (let y = 0; y < size; y += 1) {
+    for (let x = 0; x < size; x += 1) {
+      const el = cells[i++];
+      if (!el || el.classList.contains("off")) continue;
+      const key = `${x},${y}`;
+      el.classList.toggle("territory-active", territory.active.has(key));
+      el.classList.toggle("territory", territory.idle.has(key) && !territory.active.has(key));
+    }
+  }
 }
 
 function btPieceHtml(piece) {
@@ -453,6 +495,7 @@ function btOnDragMove(ev) {
   drag.target = target;
   const valid = btCanPlace(btState.layout, drag.type, target.x, target.y, drag.pieceId).ok;
   btShowGhost(drag.type, target.x, target.y, valid);
+  if (drag.type === "banner") btPaintTerritory();
 }
 
 function btOnDragEnd(ev) {
@@ -507,6 +550,7 @@ function btOnDragCancel() {
 function btCleanupDrag() {
   btState.drag = null;
   btHideGhost();
+  btPaintTerritory();
   window.removeEventListener("pointermove", btOnDragMove);
   window.removeEventListener("pointerup", btOnDragEnd);
   window.removeEventListener("pointercancel", btOnDragCancel);
@@ -614,6 +658,101 @@ function btImportFile(file) {
   reader.onload = () => btImport(String(reader.result));
   reader.onerror = () => btStatus("Could not read that file.", "warn");
   reader.readAsText(file);
+}
+
+/* ── Named browser saves ─────────────────────── */
+
+function btFormatSaveStamp(iso) {
+  try {
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return "";
+    return d.toLocaleString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+  } catch {
+    return "";
+  }
+}
+
+function btRenderSavesList(selectedId) {
+  if (!btEl.saves) return;
+  const saves = btListNamedSaves();
+  if (!saves.length) {
+    btEl.saves.innerHTML = `<option value="">No saved layouts yet</option>`;
+    return;
+  }
+  const pick = selectedId || btEl.saves.value;
+  btEl.saves.innerHTML = saves
+    .map((s) => {
+      const stamp = btFormatSaveStamp(s.savedAt);
+      const label = stamp ? `${btEscape(s.name)} — ${btEscape(stamp)}` : btEscape(s.name);
+      return `<option value="${btEscape(s.id)}">${label}</option>`;
+    })
+    .join("");
+  if (pick && [...btEl.saves.options].some((o) => o.value === pick)) btEl.saves.value = pick;
+}
+
+function btSaveNamed() {
+  const name = (btEl.saveName?.value || "").trim();
+  try {
+    const entry = btUpsertNamedSave(name, btState.layout);
+    btEl.saveName.value = entry.name;
+    btRenderSavesList(entry.id);
+    btStatus(`Saved “${entry.name}” on this device.`);
+  } catch (err) {
+    btStatus(err.message || "Could not save.", "warn");
+  }
+}
+
+function btLoadNamed() {
+  const id = btEl.saves?.value;
+  const entry = id ? btGetNamedSave(id) : null;
+  if (!entry) {
+    btStatus("Pick a saved layout first.", "warn");
+    return;
+  }
+  try {
+    const layout = btDeserialize(entry.layout);
+    btPushHistory();
+    btState.layout = layout;
+    btState.selectedId = null;
+    btState.activeQueueId = null;
+    btCommit();
+    btEl.saveName.value = entry.name;
+    btStatus(`Loaded “${entry.name}”.`);
+  } catch (err) {
+    btStatus(`Could not load that save: ${err.message}`, "warn");
+  }
+}
+
+function btDownloadNamed() {
+  const id = btEl.saves?.value;
+  const entry = id ? btGetNamedSave(id) : null;
+  if (!entry) {
+    btStatus("Pick a saved layout to download.", "warn");
+    return;
+  }
+  const json = JSON.stringify(entry.layout, null, 2);
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  const safe = entry.name.replace(/[^\w\-]+/g, "-").replace(/^-|-$/g, "") || "layout";
+  link.href = url;
+  link.download = `sqb-bear-trap-${safe}.json`;
+  link.click();
+  URL.revokeObjectURL(url);
+  btStatus(`Downloaded “${entry.name}”.`);
+}
+
+function btDeleteNamed() {
+  const id = btEl.saves?.value;
+  const entry = id ? btGetNamedSave(id) : null;
+  if (!entry) {
+    btStatus("Pick a saved layout to delete.", "warn");
+    return;
+  }
+  if (!window.confirm(`Delete saved layout “${entry.name}”?`)) return;
+  btDeleteNamedSave(id);
+  btRenderSavesList();
+  btStatus(`Deleted “${entry.name}”.`);
 }
 
 /* ── Wiring ─────────────────────────────────── */
@@ -824,6 +963,14 @@ function btWireActions() {
     btImportFile(ev.target.files && ev.target.files[0]);
     ev.target.value = "";
   });
+
+  document.getElementById("bt-save-named").addEventListener("click", btSaveNamed);
+  document.getElementById("bt-load-named").addEventListener("click", btLoadNamed);
+  document.getElementById("bt-download-named").addEventListener("click", btDownloadNamed);
+  document.getElementById("bt-delete-named").addEventListener("click", btDeleteNamed);
+  btEl.saveName.addEventListener("keydown", (ev) => {
+    if (ev.key === "Enter") btSaveNamed();
+  });
 }
 
 /* ── Zoom ───────────────────────────────────── */
@@ -850,6 +997,7 @@ function btHydrateDefaults(defaults, { hadSaved }) {
   if (!defaults || typeof defaults !== "object") return;
 
   btConfigurePieceTypes(defaults.pieceTypes);
+  btConfigureBannerCoverage(defaults.bannerCoverage);
 
   let needsFit = false;
   const untouched =
@@ -901,6 +1049,8 @@ async function btInit() {
   btEl.stats = document.getElementById("bt-stats");
   btEl.status = document.getElementById("bt-status");
   btEl.share = document.getElementById("bt-share");
+  btEl.saveName = document.getElementById("bt-save-name");
+  btEl.saves = document.getElementById("bt-saves");
   btEl.rosterText = document.getElementById("bt-roster-text");
   btEl.singleName = document.getElementById("bt-single-name");
   btEl.singleTc = document.getElementById("bt-single-tc");
@@ -928,6 +1078,7 @@ async function btInit() {
   btWireToolbar();
   btWireActions();
 
+  btRenderSavesList();
   btRenderAll();
   btFitBoard();
   window.addEventListener("resize", btFitBoard);

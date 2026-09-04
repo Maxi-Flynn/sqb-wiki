@@ -377,6 +377,11 @@ body.page-wide { max-width: 900px; }
 .bt-cell { border: 1px solid #1C1710; background: #131009; }
 .bt-cell.inner { background: #1A1408; }
 .bt-cell.off { border-color: transparent; background: transparent; }
+/* Banner territory — idle claim vs selected/moving preview. Base cells stay #131009. */
+.bt-cell.territory { background: #1C2410; border-color: #2A3A18; }
+.bt-cell.territory.inner { background: #222C14; }
+.bt-cell.territory-active { background: #2E3A12; border-color: #6B8A2A; box-shadow: inset 0 0 0 1px rgba(154, 196, 74, 0.35); }
+.bt-cell.territory-active.inner { background: #354418; }
 
 /* Overlay must not swallow clicks meant for empty cells underneath. */
 .bt-pieces { position: absolute; inset: 0; pointer-events: none; }

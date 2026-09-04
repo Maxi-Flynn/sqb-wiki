@@ -59,7 +59,7 @@
   <div class="bt-panel">
     <div class="bt-field">
       <label for="bt-roster-text">Paste a list — one castle per line (<code>Name</code>, <code>Name, TC</code>, or <code>Name, TC, Power</code>)</label>
-      <textarea id="bt-roster-text" rows="4" placeholder="Maxi, 30, 42000000&#10;Flynn, 29, 38000000&#10;Truss"></textarea>
+      <textarea id="bt-roster-text" rows="4" placeholder="Maxi, 30, 42000000&#10;Flynn, 29, 38000000&#10;Scout, 28"></textarea>
     </div>
     <div class="bt-btn-row">
       <button type="button" class="bt-btn primary" id="bt-roster-add">Add to roster</button>
@@ -110,9 +110,30 @@
   <div class="section-title">Selected Piece</div>
   <div class="bt-panel" id="bt-inspector"></div>
 
-  <!-- Share -->
+  <!-- Save & Share -->
   <div class="section-title">Save & Share</div>
   <div class="bt-panel">
+    <div class="bt-field">
+      <label for="bt-save-name">Save to this browser</label>
+      <div class="bt-field-row">
+        <div class="bt-field grow" style="margin-bottom:0">
+          <input type="text" id="bt-save-name" placeholder="e.g. Trap A — Friday" maxlength="48">
+        </div>
+        <button type="button" class="bt-btn primary" id="bt-save-named">Save</button>
+      </div>
+    </div>
+    <div class="bt-field">
+      <label for="bt-saves">Saved layouts</label>
+      <select id="bt-saves" class="bt-select wide" aria-label="Saved layouts"></select>
+    </div>
+    <div class="bt-btn-row">
+      <button type="button" class="bt-btn primary" id="bt-load-named">Load save</button>
+      <button type="button" class="bt-btn" id="bt-download-named">Download save</button>
+      <button type="button" class="bt-btn danger" id="bt-delete-named">Delete save</button>
+    </div>
+    <div class="bt-hint">Saves stay on this device. Download a <code>.json</code> file to back up or share in Discord.</div>
+
+    <div class="bt-divider">clipboard / file</div>
     <div class="bt-btn-row">
       <button type="button" class="bt-btn primary" id="bt-export">Export</button>
       <button type="button" class="bt-btn" id="bt-copy">Copy</button>
@@ -131,11 +152,11 @@
       <button type="button" class="bt-btn" id="bt-clear">Clear board</button>
       <button type="button" class="bt-btn danger" id="bt-reset">Reset everything</button>
     </div>
-    <div class="bt-hint">Layouts live in this browser only — export and drop the JSON in Discord to share with the alliance.</div>
+    <div class="bt-hint">Autosave keeps your latest board; named saves let you keep several trap plans side by side.</div>
   </div>
 
   <div class="note-box">
-    <strong>Footprints:</strong> Bear Trap 3×3 (locked to center) · Castle 2×2 · Node 2×2 · Banner 1×1. Grid sizes stay odd so the trap sits perfectly centered.
+    <strong>Footprints:</strong> Bear Trap 3×3 (locked to center) · Castle 2×2 · Node 2×2 · Banner 1×1 (territory ~7×7). Grid sizes stay odd so the trap sits perfectly centered.
   </div>
 </div>
 
