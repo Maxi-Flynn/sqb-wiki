@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SQB Wiki — Kingdom #1762</title>
+<script src="js/theme-boot.js"></script>
 <link rel="stylesheet" href="css/theme.css">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0F0C08">
@@ -11,7 +12,10 @@
 <body>
 
 <div class="header">
-  <div class="header-eyebrow">SQB Alliance · Kingdom #1762</div>
+  <div class="header-top">
+    <div class="header-eyebrow">SQB Alliance · Kingdom #1762</div>
+    <button type="button" class="theme-toggle" aria-pressed="false">☀ Light</button>
+  </div>
   <div class="header-title">⚔ SQB War Room</div>
   <div class="header-sub">Cheat sheets, timing matrices & event ROI — built by the alliance, for the alliance</div>
   <div class="site-nav">
@@ -73,6 +77,10 @@
   Built by SQB for K1762. Point values sourced from community wikis, in-game screens & alliance chat (Jul 2026). Always verify against your live event screen — values vary by TC level & generation.
 </div>
 
+<script src="js/common.js"></script>
 <script src="js/analytics.js"></script>
+<script>
+  bindThemeToggle(document.querySelector(".theme-toggle"));
+</script>
 </body>
 </html>
