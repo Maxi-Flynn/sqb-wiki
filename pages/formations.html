@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formations Planner — SQB Wiki</title>
+<link rel="stylesheet" href="../css/theme.css">
+</head>
+<body class="page-wide">
+
+<div class="header"></div>
+
+<div class="fm-page">
+  <div class="intro">
+    Turn troop inventory + march capacity into per-formation recipes the in-game UI can actually dial —
+    absolute counts, Balance % of your <strong>real</strong> capacity (never the join cap), and whether to
+    <strong>Save as Count</strong> or <strong>Save as Ratio</strong>.
+  </div>
+
+  <div class="fm-grid">
+    <section class="bt-panel">
+      <div class="section-title" style="margin-top:0">Army &amp; marches</div>
+
+      <div class="bt-field-row">
+        <div class="bt-field">
+          <label for="fm-inf">Infantry owned</label>
+          <input type="number" id="fm-inf" min="0" step="1000" value="40000">
+        </div>
+        <div class="bt-field">
+          <label for="fm-cav">Cavalry owned</label>
+          <input type="number" id="fm-cav" min="0" step="1000" value="80000">
+        </div>
+        <div class="bt-field">
+          <label for="fm-arch">Archers owned</label>
+          <input type="number" id="fm-arch" min="0" step="1000" value="220000">
+        </div>
+      </div>
+
+      <div class="bt-field-row">
+        <div class="bt-field">
+          <label for="fm-capacity">March capacity</label>
+          <input type="number" id="fm-capacity" min="1" step="1000" value="107000">
+        </div>
+        <div class="bt-field">
+          <label for="fm-slots">Formation slots</label>
+          <input type="number" id="fm-slots" min="1" max="8" value="4">
+        </div>
+        <div class="bt-field">
+          <label for="fm-joincap">Alliance join cap <span class="fm-optional">(optional)</span></label>
+          <input type="number" id="fm-joincap" min="0" step="1000" placeholder="e.g. 100000">
+        </div>
+      </div>
+
+      <div class="bt-field-row">
+        <div class="bt-field grow">
+          <label for="fm-profile">Profile</label>
+          <select id="fm-profile" class="bt-select wide">
+            <option value="bear-join">Bear — Joiner (0 / 20 / 80)</option>
+            <option value="bear-lead">Bear — Rally lead (1 / 10 / 89)</option>
+          </select>
+        </div>
+        <div class="bt-field grow">
+          <label for="fm-strategy">Packing strategy</label>
+          <select id="fm-strategy" class="bt-select wide">
+            <option value="fill">Fill slots — fewer hero-less scraps</option>
+            <option value="strict">Strict ratio — leftovers OK</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="bt-btn-row">
+        <button type="button" class="bt-btn primary" id="fm-run">Build formations</button>
+        <button type="button" class="bt-btn" id="fm-reset">Reset demo numbers</button>
+      </div>
+      <div class="bt-hint" id="fm-profile-blurb"></div>
+    </section>
+
+    <aside class="bt-panel fm-help">
+      <div class="section-title" style="margin-top:0">How to use in-game</div>
+      <ol class="fm-steps">
+        <li>Open a formation slot.</li>
+        <li>Enter the <strong>Balance %</strong> shown (these are % of your <em>real</em> march capacity).</li>
+        <li>Confirm the absolute troop counts match the recipe.</li>
+        <li>Save as <strong>Count</strong> or <strong>Ratio</strong> exactly as recommended.</li>
+      </ol>
+      <div class="bt-hint">
+        Whale hunts often set a join cap (e.g. 100k) so more players fit. That cap limits troops
+        <em>sent</em> — it is not the denominator for Balance %.
+      </div>
+    </aside>
+  </div>
+
+  <div id="fm-notes" class="fm-notes" hidden></div>
+  <div id="fm-summary" class="fm-summary" hidden></div>
+  <div id="fm-results" class="fm-results"></div>
+</div>
+
+<script src="../js/common.js"></script>
+<script src="../js/analytics.js"></script>
+<script src="../js/formations-model.js"></script>
+<script src="../js/formations.js"></script>
+</body>
+</html>

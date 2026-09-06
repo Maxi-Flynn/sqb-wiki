@@ -18,6 +18,7 @@ function renderNav(activeId) {
     { id: "kvk", label: "👑 KvK", href: "kvk-matrix.html" },
     { id: "sg", label: "🏆 Str. Gov", href: "sg-matrix.html" },
     { id: "beartrap", label: "🐻 Bear Trap", href: "bear-trap.html" },
+    { id: "formations", label: "📐 Formations", href: "formations.html" },
     { id: "guides", label: "📜 Guides", href: "guides.html" },
     { id: "calendar", label: "🗓 Calendar", href: "calendar.html" },
   ];
