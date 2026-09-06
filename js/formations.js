@@ -116,9 +116,11 @@ function fmMarchCard(m) {
       <div class="fm-block-label">Balance % of real capacity (${m.capacity.toLocaleString()})</div>
       <div class="fm-row">${pctRow}</div>
       <div class="fm-empty-pct">${
-        m.emptyPct >= 0.5
+        m.capped && m.emptyPct >= 0.5
           ? `Leave ~${fmFormatPct(m.emptyPct)}% empty so you stay under the send ceiling.`
-          : `Percents sum to ~${fmFormatPct(m.pctSum)}%.`
+          : m.kind === "leftover" && m.emptyPct >= 0.5
+            ? `Partial fill — percents sum to ~${fmFormatPct(m.pctSum)}% of capacity.`
+            : `Percents sum to ~${fmFormatPct(m.pctSum)}%.`
       }</div>
     </div>
 
