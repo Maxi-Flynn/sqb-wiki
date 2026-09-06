@@ -33,15 +33,67 @@ function renderNav(activeId) {
   return nav;
 }
 
+const THEME_KEY = "sqb-theme";
+
+function getTheme() {
+  try {
+    const t = localStorage.getItem(THEME_KEY);
+    if (t === "light" || t === "dark") return t;
+  } catch {
+    /* ignore */
+  }
+  return document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+}
+
+function applyTheme(theme) {
+  const next = theme === "light" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", next);
+  try {
+    localStorage.setItem(THEME_KEY, next);
+  } catch {
+    /* ignore */
+  }
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) {
+    const color = getComputedStyle(document.documentElement).getPropertyValue("--theme-color").trim();
+    if (color) meta.setAttribute("content", color);
+  }
+  document.querySelectorAll(".theme-toggle").forEach(syncThemeToggle);
+}
+
+function syncThemeToggle(btn) {
+  const light = getTheme() === "light";
+  btn.setAttribute("aria-pressed", light ? "true" : "false");
+  btn.setAttribute("aria-label", light ? "Switch to dark mode" : "Switch to light mode");
+  btn.innerHTML = light ? "☾ Dark" : "☀ Light";
+}
+
+function bindThemeToggle(btn) {
+  if (!btn || btn.dataset.bound === "1") return;
+  btn.dataset.bound = "1";
+  syncThemeToggle(btn);
+  btn.addEventListener("click", () => {
+    applyTheme(getTheme() === "light" ? "dark" : "light");
+  });
+}
+
+function themeToggleHtml() {
+  return `<button type="button" class="theme-toggle" aria-pressed="false">☀ Light</button>`;
+}
+
 /** Mount the standard header + nav into a container */
 function mountHeader({ eyebrow, title, sub, activeId }) {
   const header = document.querySelector(".header");
   header.innerHTML = `
-    <div class="header-eyebrow">${eyebrow}</div>
+    <div class="header-top">
+      <div class="header-eyebrow">${eyebrow}</div>
+      ${themeToggleHtml()}
+    </div>
     <div class="header-title">${title}</div>
     <div class="header-sub">${sub}</div>
   `;
   header.appendChild(renderNav(activeId));
+  bindThemeToggle(header.querySelector(".theme-toggle"));
 }
 
 /** Render a matrix table (used by both SG and KvK pages) */
