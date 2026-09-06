@@ -71,6 +71,10 @@
 
   function applyInfFloor(counts, profile, pool, targetCap) {
     if (profile.infFloor <= 0) return counts;
+    // Don't inflate a near-empty stub into a 5k-infantry-only march.
+    if (counts.cav + counts.arch < Math.max(2000, Math.floor(targetCap * 0.15))) {
+      return counts;
+    }
     if (counts.inf >= profile.infFloor) return counts;
     if (pool.inf < profile.infFloor) {
       var take = Math.min(pool.inf, targetCap - fmSum(counts) + counts.inf);
@@ -152,13 +156,16 @@
     }
 
     counts = applyInfFloor(counts, profile, pool, targetCap);
-    if (fmSum(counts) < 500) return null;
+    var send = fmSum(counts);
+    // Skip thin stubs — leftovers become an explicit Count scrap card instead.
+    if (send < 500) return null;
+    if (counts.cav + counts.arch < 1000) return null;
 
     pool.inf -= counts.inf;
     pool.cav -= counts.cav;
     pool.arch -= counts.arch;
 
-    return { counts: counts, send: fmSum(counts) };
+    return { counts: counts, send: send };
   }
 
   function balancePct(counts, realCapacity) {
