@@ -26,6 +26,13 @@
     <div class="mp-toolbar-row">
       <label class="mp-jump" for="mp-jump">Jump</label>
       <select id="mp-jump" class="bt-select" aria-label="Jump to structure"></select>
+      <label class="mp-jump" for="mp-access">Rings</label>
+      <select id="mp-access" class="bt-select" aria-label="Unlocked rings">
+        <option value="badlands">Fresh server — Badlands only</option>
+        <option value="plains">Plains unlocked</option>
+        <option value="fertile">Fertile unlocked</option>
+      </select>
+      <button type="button" class="bt-btn primary" id="mp-route">Find HQ</button>
     </div>
   </div>
 
@@ -38,11 +45,12 @@
   <div class="mp-legend" id="mp-legend"></div>
 
   <div class="note-box">
-    Map data extracted from <a href="https://github.com/Bleezy-D/Alliance-Layout-Planner">Bleezy-D/Alliance-Layout-Planner</a> (MIT), which embeds the community ksmapper survey. Drag to pan, scroll or pinch to zoom. Banner routing is not in this version yet.
+    Map data extracted from <a href="https://github.com/Bleezy-D/Alliance-Layout-Planner">Bleezy-D/Alliance-Layout-Planner</a> (MIT). <strong>Find HQ</strong> places one 15×15 headquarters and the shortest 7×7 banner chains that fit in the 285-banner cap. An outpost counts when the banner square touches that outpost’s no-build ring. Drag to pan, scroll or pinch to zoom.
   </div>
 </div>
 
 <script src="../js/common.js"></script>
+<script src="../js/map-route.js"></script>
 <script src="../js/map-view.js"></script>
 </body>
 </html>

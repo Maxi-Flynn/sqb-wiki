@@ -199,6 +199,25 @@ function mpPaint() {
   ctx.drawImage(mp.base, 0, 0);
   mpDrawRings(ctx);
   mpDrawStructures(ctx);
+  mpDrawRoute(ctx);
+  ctx.restore();
+}
+
+function mpDrawRoute(ctx) {
+  const route = mp.route;
+  if (!route) return;
+  ctx.save();
+  ctx.strokeStyle = "rgba(196,163,90,.9)";
+  ctx.fillStyle = "rgba(196,163,90,.18)";
+  ctx.lineWidth = 1;
+  const hx = route.hqX + 1;
+  const hy = route.hqY + 1;
+  ctx.strokeRect(hx - 7, hy - 7, 15, 15);
+  ctx.fillRect(route.hqX, route.hqY, 3, 3);
+  for (const banner of route.banners) {
+    ctx.strokeRect(banner.x - 3, banner.y - 3, 7, 7);
+    ctx.fillRect(banner.x, banner.y, 1, 1);
+  }
   ctx.restore();
 }
 
@@ -234,6 +253,11 @@ function mpWire() {
   mpEl.showZones.addEventListener("change", () => { mpRequest(); });
   mpEl.showStructures.addEventListener("change", () => { mpRequest(); });
   document.getElementById("mp-fit").addEventListener("click", mpFit);
+  document.getElementById("mp-route").addEventListener("click", mpFindRoute);
+  mpEl.access.addEventListener("change", () => {
+    mp.masks = null;
+    mp.maskKey = "";
+  });
   document.getElementById("mp-zoom-in").addEventListener("click", () => {
     const r = mpEl.stage.getBoundingClientRect();
     mpZoomAt(r.left + r.width / 2, r.top + r.height / 2, 1.25);
@@ -329,11 +353,54 @@ async function mpLoadBin(url) {
   return new Uint8Array(await res.arrayBuffer());
 }
 
+function mpYield() {
+  return new Promise((resolve) => { setTimeout(resolve, 0); });
+}
+
+async function mpFindRoute() {
+  if (!mp.world) return;
+  mpEl.routeBtn.disabled = true;
+  const access = mpEl.access.value;
+  try {
+    mpEl.readout.textContent = "Building the placement mask…";
+    await mpYield();
+    if (mp.maskKey !== access) {
+      mp.masks = mrBuildMasks(mp.world, access);
+      mp.maskKey = access;
+    }
+    const candidates = mrHqCandidates(mp.masks);
+    if (!candidates.length) {
+      mpEl.readout.textContent = "No legal headquarters tile in that ring.";
+      return;
+    }
+    let best = null;
+    for (let i = 0; i < candidates.length; i += 1) {
+      mpEl.readout.textContent = `Trying headquarters ${i + 1} of ${candidates.length}…`;
+      await mpYield();
+      const cand = candidates[i];
+      const route = mrSearch(mp.masks, cand.x, cand.y, mp.structures);
+      if (!best || route.reached > best.reached
+        || (route.reached === best.reached && route.bannerCount < best.bannerCount)) {
+        best = route;
+      }
+    }
+    best.nodes = mrCountNodes(mp.nodes, best.hqX, best.hqY, best.banners);
+    mp.route = best;
+    const hx = best.hqX + 1;
+    const hy = best.hqY + 1;
+    mpEl.readout.textContent = `HQ X:${hx} Y:${mpGameY(hy)} · ${best.bannerCount} banners · ${best.reached} of ${best.reachable} reachable outposts · ${best.nodes} nodes covered`;
+    mpCenterOn({ x: best.hqX, y: best.hqY, size: 3 });
+    mpRequest();
+  } finally {
+    mpEl.routeBtn.disabled = false;
+  }
+}
+
 async function mpInit() {
   mountHeader({
     eyebrow: "SQB Alliance · Kingdom #1762",
     title: "🗺️ Kingdom Map",
-    sub: "Terrain, rings, outposts, and resource nodes — banner routing comes next",
+    sub: "Terrain, outposts, and a first banner chain from one headquarters",
     activeId: "map",
   });
 
@@ -346,6 +413,8 @@ async function mpInit() {
   mpEl.showNodes = document.getElementById("mp-show-nodes");
   mpEl.showZones = document.getElementById("mp-show-zones");
   mpEl.showStructures = document.getElementById("mp-show-structures");
+  mpEl.access = document.getElementById("mp-access");
+  mpEl.routeBtn = document.getElementById("mp-route");
 
   const [meta, structs, terrain, nodeBytes] = await Promise.all([
     loadData("map/meta.json"),
@@ -360,6 +429,13 @@ async function mpInit() {
   mp.terrain = terrain;
   mp.structures = structs.structures;
   mp.castle = structs.castle;
+  mp.world = {
+    zones: meta.zones,
+    king: meta.kingZone,
+    terrain,
+    nodes: mp.nodes,
+    structures: mp.structures,
+  };
   for (let i = 0; i + 2 < nodeBytes.length; i += 3) {
     const v = (nodeBytes[i] << 16) | (nodeBytes[i + 1] << 8) | nodeBytes[i + 2];
     mp.nodes.push({ t: (v >> 22) & 3, x: (v >> 11) & 2047, y: v & 2047 });
