@@ -1,0 +1,61 @@
+{
+  "source": "Bleezy-D/Alliance-Layout-Planner (MIT), community ksmapper dataset",
+  "sourceUrl": "https://github.com/Bleezy-D/Alliance-Layout-Planner",
+  "grid": 1200,
+  "cellBits": "2 bits per tile, 4 tiles per byte, low pair is the leftmost tile. 0 open, 1 mountain, 2 lake.",
+  "nodeRecord": "3 bytes per node, big-endian: type in the top 2 bits, x in the next 11, y in the low 11. type 0 bread, 1 wood, 2 stone, 3 iron. x,y are the top-left of a 2x2 in internal coordinates.",
+  "coords": "Internal Y grows downward. In-game Y is (grid - 1 - internalY). In-game X equals internal X.",
+  "zones": {
+    "forbidden": {
+      "name": "Forbidden ring",
+      "x1": 586,
+      "y1": 586,
+      "x2": 613,
+      "y2": 613
+    },
+    "ruins": {
+      "name": "Ruins",
+      "x1": 552,
+      "y1": 552,
+      "x2": 647,
+      "y2": 647
+    },
+    "fertile": {
+      "name": "Fertile",
+      "x1": 450,
+      "y1": 450,
+      "x2": 749,
+      "y2": 749
+    },
+    "plains": {
+      "name": "Plains",
+      "x1": 300,
+      "y1": 300,
+      "x2": 899,
+      "y2": 899
+    },
+    "badlands": {
+      "name": "Badlands",
+      "x1": 0,
+      "y1": 0,
+      "x2": 1199,
+      "y2": 1199
+    }
+  },
+  "kingZone": {
+    "x1": 594,
+    "y1": 594,
+    "x2": 606,
+    "y2": 606
+  },
+  "counts": {
+    "mountain": 67215,
+    "lake": 23246,
+    "nodes": 6499,
+    "bread": 2169,
+    "wood": 2171,
+    "stone": 1470,
+    "iron": 689,
+    "structures": 90
+  }
+}

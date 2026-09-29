@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kingdom Map — SQB Wiki</title>
+<link rel="stylesheet" href="../css/theme.css">
+</head>
+<body class="page-map">
+
+<div class="header"></div>
+
+<div class="mp-page">
+  <div class="intro">Pan and zoom the kingdom map. Coordinates under the cursor match the in-game X:Y readout. Terrain, rings, and structures come from the community Alliance Layout Planner dataset — spot-check a landmark you know before trusting a path.</div>
+
+  <div class="mp-toolbar">
+    <div class="mp-toolbar-row">
+      <button type="button" class="bt-btn" id="mp-zoom-out" aria-label="Zoom out">−</button>
+      <button type="button" class="bt-btn" id="mp-zoom-in" aria-label="Zoom in">+</button>
+      <button type="button" class="bt-btn" id="mp-fit">Fit</button>
+      <label class="mp-check"><input type="checkbox" id="mp-show-terrain" checked> Terrain</label>
+      <label class="mp-check"><input type="checkbox" id="mp-show-nodes" checked> Nodes</label>
+      <label class="mp-check"><input type="checkbox" id="mp-show-zones" checked> Rings</label>
+      <label class="mp-check"><input type="checkbox" id="mp-show-structures" checked> Structures</label>
+    </div>
+    <div class="mp-toolbar-row">
+      <label class="mp-jump" for="mp-jump">Jump</label>
+      <select id="mp-jump" class="bt-select" aria-label="Jump to structure"></select>
+    </div>
+  </div>
+
+  <div class="mp-readout" id="mp-readout">Loading map…</div>
+
+  <div class="mp-stage" id="mp-stage">
+    <canvas id="mp-canvas"></canvas>
+  </div>
+
+  <div class="mp-legend" id="mp-legend"></div>
+
+  <div class="note-box">
+    Map data extracted from <a href="https://github.com/Bleezy-D/Alliance-Layout-Planner">Bleezy-D/Alliance-Layout-Planner</a> (MIT), which embeds the community ksmapper survey. Drag to pan, scroll or pinch to zoom. Banner routing is not in this version yet.
+  </div>
+</div>
+
+<script src="../js/common.js"></script>
+<script src="../js/map-view.js"></script>
+</body>
+</html>

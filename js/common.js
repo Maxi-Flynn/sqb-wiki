@@ -19,6 +19,7 @@ function renderNav(activeId) {
     { id: "sg", label: "🏆 Str. Gov", href: "sg-matrix.html" },
     { id: "beartrap", label: "🐻 Bear Trap", href: "bear-trap.html" },
     { id: "formations", label: "📐 Formations", href: "formations.html" },
+    { id: "map", label: "🗺️ Map", href: "map.html" },
     { id: "guides", label: "📜 Guides", href: "guides.html" },
     { id: "calendar", label: "🗓 Calendar", href: "calendar.html" },
   ];
